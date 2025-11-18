@@ -104,7 +104,7 @@ export default function CoursesPage() {
     const baseUrl = window.location.origin;
     if (!course.accessCode) return baseUrl + '/curso';
     return course.isPublic 
-      ? `${baseUrl}/c/${course.slug}`
+      ? `${baseUrl}/curso-publico/${course.slug}`
       : `${baseUrl}/curso/${course.accessCode}`;
   };
 
