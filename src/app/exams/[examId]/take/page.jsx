@@ -43,6 +43,7 @@ export default function TakeExamPage() {
   const isProcessingVisibilityRef = useRef(false);
   const examRef = useRef(null);
   const answersRef = useRef({});
+  const submittingRef = useRef(false);
 
   useEffect(() => {
     if (!studentEmail || !studentName) {
@@ -207,10 +208,14 @@ export default function TakeExamPage() {
   };
 
   const handleAutoSubmit = async (reason = 'timeout') => {
+    // Prevenir llamadas duplicadas usando ref
+    if (submittingRef.current) {
+      console.log('Already submitting (ref check), ignoring duplicate call');
+      return;
+    }
+    
+    submittingRef.current = true;
     console.log('handleAutoSubmit called with reason:', reason);
-    console.log('Current submitting state:', submitting);
-    console.log('Exam exists:', !!exam);
-    console.log('Questions exist:', exam?.questions?.length);
     
     cleanup();
     await submitExam(true, reason);
@@ -230,11 +235,21 @@ export default function TakeExamPage() {
     const currentExam = examRef.current || exam;
     const currentAnswers = answersRef.current || answers;
     
-    if (submitting || !currentExam || !currentExam.questions) {
-      console.log('Cannot submit:', { submitting, hasExam: !!currentExam, hasQuestions: !!currentExam?.questions });
+    // Doble validación: estado Y ref para prevenir duplicados
+    if (submittingRef.current || submitting || !currentExam || !currentExam.questions) {
+      console.log('Cannot submit:', { 
+        submittingRef: submittingRef.current,
+        submitting, 
+        hasExam: !!currentExam, 
+        hasQuestions: !!currentExam?.questions 
+      });
       return;
     }
+    
+    // Marcar como submitting INMEDIATAMENTE (ref primero, luego estado)
+    submittingRef.current = true;
     setSubmitting(true);
+    setAutoSubmitting(true);
 
     try {
       // Calcular puntaje - Las preguntas sin responder cuentan como incorrectas
@@ -258,13 +273,14 @@ export default function TakeExamPage() {
         reason,
         totalQuestions,
         correctAnswers,
-        answeredQuestions: Object.keys(currentAnswers).length
+        answeredQuestions: Object.keys(currentAnswers).length,
+        allAnswers: currentAnswers
       });
 
-      // Actualizar intento con respuestas y puntaje
+      // Actualizar intento con respuestas y puntaje (USAR currentAnswers)
       if (attemptId) {
         await updateExamAttempt(attemptId, {
-          answers: answers,
+          answers: currentAnswers,  // CAMBIADO: usar currentAnswers en lugar de answers
           submittedAt: new Date(),
           score: score,
           status: 'submitted',
@@ -281,7 +297,7 @@ export default function TakeExamPage() {
             attemptId,
             examId: params.examId,
             studentEmail,
-            answers,
+            answers: currentAnswers,  // CAMBIADO: usar currentAnswers
             score
           })
         }).catch(err => console.error('Error generating feedback:', err));
