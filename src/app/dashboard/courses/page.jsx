@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Plus, BookOpen, Edit, Trash2, Copy, Link2, Eye, EyeOff, Users, FileText, GraduationCap } from 'lucide-react';
+import { Plus, BookOpen, Edit, Trash2, Copy, Link2, Eye, EyeOff, Users, FileText, GraduationCap, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, Card, Modal, ConfirmDialog } from '@/components/ui';
 import { DashboardNav } from '@/components/DashboardNav';
@@ -24,6 +24,8 @@ export default function CoursesPage() {
     tipo: 'regular', // 'regular' (18 sesiones) o 'empresarial' (7 sesiones)
   });
   const [submitting, setSubmitting] = useState(false);
+  const [editingCourseId, setEditingCourseId] = useState(null);
+  const [editData, setEditData] = useState({});
 
   useEffect(() => {
     if (user?.uid) {
@@ -111,6 +113,38 @@ export default function CoursesPage() {
       : `${baseUrl}/curso/${course.accessCode}`;
   };
 
+  const startEdit = (course) => {
+    setEditingCourseId(course.id);
+    setEditData({
+      name: course.name,
+      nivel: course.nivel,
+      description: course.description || ''
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingCourseId(null);
+    setEditData({});
+  };
+
+  const saveEdit = async (courseId) => {
+    const result = await updateCourse(courseId, {
+      name: editData.name,
+      nivel: editData.nivel,
+      description: editData.description,
+      slug: editData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    });
+
+    if (result.success) {
+      toast.success('Curso actualizado');
+      await loadCourses();
+      setEditingCourseId(null);
+      setEditData({});
+    } else {
+      toast.error('Error al actualizar: ' + result.error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--bg-darkest)]">
       <DashboardNav />
@@ -175,12 +209,40 @@ export default function CoursesPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-2xl font-bold text-[var(--text-primary)]">
-                              {course.name}
-                            </h3>
-                            <span className="px-3 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-semibold rounded-full">
-                              Nivel {course.nivel}
-                            </span>
+                            <div className="flex-1 min-w-0">
+                              {editingCourseId === course.id ? (
+                                <input
+                                  type="text"
+                                  value={editData.name}
+                                  onChange={(e) => setEditData({...editData, name: e.target.value})}
+                                  className="text-2xl font-bold text-[var(--text-primary)] bg-transparent outline-none border-b-2 border-[var(--accent-primary)] w-full"
+                                  autoFocus
+                                />
+                              ) : (
+                                <h3 
+                                  className="text-2xl font-bold text-[var(--text-primary)] cursor-pointer hover:text-[var(--accent-primary)] transition-colors"
+                                  onClick={() => startEdit(course)}
+                                  title="Click para editar"
+                                >
+                                  {course.name}
+                                </h3>
+                              )}
+                            </div>
+                            {editingCourseId === course.id ? (
+                              <select
+                                value={editData.nivel}
+                                onChange={(e) => setEditData({...editData, nivel: e.target.value})}
+                                className="px-3 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-semibold rounded-full outline-none cursor-pointer"
+                              >
+                                <option value="1">Nivel 1</option>
+                                <option value="2">Nivel 2</option>
+                                <option value="3">Nivel 3</option>
+                              </select>
+                            ) : (
+                              <span className="px-3 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-semibold rounded-full">
+                                Nivel {course.nivel}
+                              </span>
+                            )}
                             <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
                               course.isPublic 
                                 ? 'bg-green-500/20 text-green-400' 
@@ -190,13 +252,58 @@ export default function CoursesPage() {
                             </span>
                           </div>
                           
-                          {course.description && (
-                            <p className="text-[var(--text-secondary)] text-sm mb-3 line-clamp-2">
-                              {course.description}
-                            </p>
+                          
+                          {editingCourseId === course.id ? (
+                            <textarea
+                              value={editData.description}
+                              onChange={(e) => setEditData({...editData, description: e.target.value})}
+                              className="w-full text-[var(--text-secondary)] text-sm bg-transparent outline-none border border-[var(--accent-primary)] rounded px-2 py-1 resize-none mb-3"
+                              rows={2}
+                              placeholder="Descripción del curso"
+                            />
+                          ) : (
+                            course.description ? (
+                              <p 
+                                className="text-[var(--text-secondary)] text-sm mb-3 line-clamp-2 cursor-pointer hover:text-[var(--text-primary)] transition-colors"
+                                onClick={() => startEdit(course)}
+                                title="Click para editar"
+                              >
+                                {course.description}
+                              </p>
+                            ) : (
+                              <p 
+                                className="text-[var(--text-secondary)]/50 text-sm mb-3 italic cursor-pointer hover:text-[var(--text-primary)] transition-colors"
+                                onClick={() => startEdit(course)}
+                                title="Click para agregar descripción"
+                              >
+                                Sin descripción
+                              </p>
+                            )
                           )}
 
-                          {/* Estadísticas */}
+                          {/* Botones de edición o Estadísticas */}
+                          {editingCourseId === course.id && (
+                            <div className="flex items-center gap-2 mb-2">
+                              <Button
+                                size="sm"
+                                onClick={() => saveEdit(course.id)}
+                                className="flex items-center gap-1 text-xs h-7"
+                              >
+                                <Check className="w-3 h-3" />
+                                Guardar
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={cancelEdit}
+                                className="flex items-center gap-1 text-xs h-7"
+                              >
+                                <X className="w-3 h-3" />
+                                Cancelar
+                              </Button>
+                            </div>
+                          )}
+
                           <div className="flex items-center gap-6 text-sm">
                             <div className="flex items-center gap-2 text-[var(--text-secondary)]">
                               <FileText className="w-4 h-4" />

@@ -33,26 +33,26 @@ _17 Nov - 1 Dic 2025_
 #### Semana 2 (25 Nov - 1 Dic) - 🚧 EN PROGRESO (70%)
 
 - [x] Implementar CRUD completo de Cursos
-  - [x] Crear curso con tipo (Regular: 18 sesiones / Empresarial: 7 sesiones)
-  - [x] Listar cursos con diseño horizontal expandido
-  - [x] Editar/Eliminar cursos
-  - [x] Sistema de códigos de acceso únicos
-  - [x] Gestión de visibilidad (Público/Privado)
-  - [x] Slugs automáticos para URLs amigables
+- [x] Crear curso con tipo (Regular: 18 sesiones / Empresarial: 7 sesiones)
+- [x] Listar cursos con diseño horizontal expandido
+- [x] Editar/Eliminar cursos
+- [x] Sistema de códigos de acceso únicos
+- [x] Gestión de visibilidad (Público/Privado)
+- [x] Slugs automáticos para URLs amigables
 - [x] Diseño de tarjetas de curso con estadísticas visuales
 - [x] Panel de administración superadmin
-  - [x] Eliminación masiva de cursos/usuarios/exámenes
-  - [x] Protección de cuentas superadmin
+- [x] Eliminación masiva de cursos/usuarios/exámenes
+- [x] Protección de cuentas superadmin
 - [ ] Editor de Sesiones con IA
-  - [x] Vista de gestión de curso por sesiones
-  - [x] Formulario de edición por sesión
-  - [x] Integración con Gemini API (gemini-2.0-flash-lite)
-  - [x] Generación de documentación IA
-  - [x] Preview y edición de Markdown (react-markdown + remark-gfm)
-  - [x] Sistema de sincronización con carpeta /docs
-  - [x] Import/Export de archivos .md
-  - [x] Gestión de archivos locales (Load/Save)
-  - [ ] Optimizaciones finales del editor
+- [x] Vista de gestión de curso por sesiones
+- [x] Formulario de edición por sesión
+- [x] Integración con Gemini API (gemini-2.0-flash-lite)
+- [x] Generación de documentación IA
+- [x] Preview y edición de Markdown (react-markdown + remark-gfm)
+- [x] Sistema de sincronización con carpeta /docs
+- [x] Import/Export de archivos .md
+- [x] Gestión de archivos locales (Load/Save)
+- [ ] Optimizaciones finales del editor
 
 ---
 
@@ -68,13 +68,13 @@ _2 Dic - 15 Dic 2025_
 - [x] CRUD de documentación en Firestore (dentro de sessions)
 - [x] Asociar documentación a sesiones de cursos
 - [ ] Vista pública de documentación (en progreso)
-  - [x] Ruta `/curso-publico/[slug]` creada
-  - [ ] Navegación entre sesiones
-  - [ ] Diseño final para estudiantes
+- [x] Ruta `/curso-publico/[slug]` creada
+- [ ] Navegación entre sesiones
+- [ ] Diseño final para estudiantes
 - [ ] Editor de Markdown mejorado
-  - [ ] Toolbar con formato
-  - [ ] Atajos de teclado
-  - [ ] Inserción de imágenes
+- [ ] Toolbar con formato
+- [ ] Atajos de teclado
+- [ ] Inserción de imágenes
 
 #### Semana 4 (9-15 Dic)
 
@@ -239,16 +239,16 @@ _20 Ene - 26 Ene 2026_
 - [x] Integración con Gemini API
 - [x] Generación automática de documentación IA
 - [x] Sistema de sincronización con carpeta `/docs`
-  - [x] API `/api/sync-docs` (POST/GET)
-  - [x] Búsqueda flexible por courseId/code/slug
-  - [x] Parseo de frontmatter YAML
+- [x] API `/api/sync-docs` (POST/GET)
+- [x] Búsqueda flexible por courseId/code/slug
+- [x] Parseo de frontmatter YAML
 - [x] Import/Export de archivos .md
 - [x] API `/api/save-markdown` para gestión local
 - [x] Estilos con @tailwindcss/typography
 - [ ] Vista pública completamente funcional
-  - [x] Ruta `/curso-publico/[slug]` creada
-  - [ ] Navegación mejorada entre sesiones
-  - [ ] Índice de contenidos
+- [x] Ruta `/curso-publico/[slug]` creada
+- [ ] Navegación mejorada entre sesiones
+- [ ] Índice de contenidos
 - [ ] Búsqueda dentro de la documentación
 - [ ] Syntax highlighting (rehype-highlight)
 
@@ -344,15 +344,15 @@ _20 Ene - 26 Ene 2026_
 ### **G. Funcionalidades Adicionales Implementadas** ✅
 
 - [x] Panel de Superadmin (`/dashboard/admin`)
-  - [x] Estadísticas del sistema (cursos, usuarios, sesiones, exámenes)
-  - [x] Eliminación masiva de datos con confirmación
-  - [x] Protección contra eliminación de superadmins
-  - [x] Sistema de roles (superadmin/profesor)
+- [x] Estadísticas del sistema (cursos, usuarios, sesiones, exámenes)
+- [x] Eliminación masiva de datos con confirmación
+- [x] Protección contra eliminación de superadmins
+- [x] Sistema de roles (superadmin/profesor)
 - [x] Sistema de archivos locales (carpeta `/docs`)
-  - [x] Estructura flexible: `/docs/[courseId|code|slug]/XX-titulo.md`
-  - [x] Sincronización bidireccional con Firestore
-  - [x] Import/Export individual de sesiones
-  - [x] Búsqueda flexible por múltiples identificadores
+- [x] Estructura flexible: `/docs/[courseId|code|slug]/XX-titulo.md`
+- [x] Sincronización bidireccional con Firestore
+- [x] Import/Export individual de sesiones
+- [x] Búsqueda flexible por múltiples identificadores
 
 ### **H. Integración y UX** - 🚧 EN PROGRESO
 
