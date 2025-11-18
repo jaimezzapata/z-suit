@@ -270,35 +270,44 @@ export default function TakeExamPage() {
     setAutoSubmitting(true);
 
     try {
+      // Crear objeto de respuestas completo - incluir TODAS las preguntas
+      // Si una pregunta no tiene respuesta, se marca como null
+      const completeAnswers = {};
+      currentExam.questions.forEach(question => {
+        completeAnswers[question.id] = currentAnswers[question.id] !== undefined 
+          ? currentAnswers[question.id] 
+          : null; // null indica que no respondió
+      });
+
       // Calcular puntaje - Las preguntas sin responder cuentan como incorrectas
       let correctAnswers = 0;
       const totalQuestions = currentExam.questions.length;
 
       currentExam.questions.forEach(question => {
-        const studentAnswer = currentAnswers[question.id];
+        const studentAnswer = completeAnswers[question.id];
         // Solo cuenta como correcta si existe la respuesta Y es correcta
-        if (studentAnswer !== undefined && studentAnswer === question.correctAnswer) {
+        if (studentAnswer !== null && studentAnswer === question.correctAnswer) {
           correctAnswers++;
         }
-        // Las preguntas sin responder (undefined) se cuentan automáticamente como incorrectas
       });
 
       const score = (correctAnswers / totalQuestions) * 5.0;
 
-      console.log('Submitting exam...', { 
+      console.log('Submitting exam with complete data...', { 
         attemptId, 
         score, 
         reason,
         totalQuestions,
         correctAnswers,
         answeredQuestions: Object.keys(currentAnswers).length,
-        allAnswers: currentAnswers
+        completeAnswers: completeAnswers,
+        originalAnswers: currentAnswers
       });
 
-      // Actualizar intento con respuestas y puntaje (USAR currentAnswers)
+      // Actualizar intento con respuestas y puntaje (USAR completeAnswers)
       if (attemptId) {
         await updateExamAttempt(attemptId, {
-          answers: currentAnswers,  // CAMBIADO: usar currentAnswers en lugar de answers
+          answers: completeAnswers,  // USAR completeAnswers con todas las preguntas
           submittedAt: new Date(),
           score: score,
           status: 'submitted',
@@ -315,7 +324,7 @@ export default function TakeExamPage() {
             attemptId,
             examId: params.examId,
             studentEmail,
-            answers: currentAnswers,  // CAMBIADO: usar currentAnswers
+            answers: completeAnswers,  // USAR completeAnswers
             score
           })
         }).catch(err => console.error('Error generating feedback:', err));
