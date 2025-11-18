@@ -9,25 +9,26 @@
 
 ## 📅 Cronograma General
 
-### **Fase 1: Configuración y Fundamentos (Semana 1-2)**
+### **✅ Fase 1: Configuración y Fundamentos (Semana 1-2)** - COMPLETADA
 *18 Nov - 1 Dic 2025*
 
-#### Semana 1 (18-24 Nov)
-- [ ] Configurar Firebase en el proyecto Next.js
-- [ ] Implementar Firebase Auth (Google + Email/Password)
-- [ ] Diseñar schema de Firestore y crear reglas de seguridad
-- [ ] Configurar variables de entorno (.env.local)
-- [ ] Crear sistema de diseño base (Tailwind config con colores Z-SUIT)
-- [ ] Implementar layout principal con Dark Mode (`#0D1117`)
-- [ ] Crear componente de navegación/sidebar
+#### Semana 1 (18-24 Nov) - ✅ COMPLETADA
+- [x] Configurar Firebase en el proyecto Next.js
+- [x] Implementar Firebase Auth (Google + Email/Password)
+- [x] Diseñar schema de Firestore y crear reglas de seguridad
+- [x] Configurar variables de entorno (.env.local)
+- [x] Crear sistema de diseño base (Tailwind config con colores Z-SUIT)
+- [x] Implementar layout principal con Dark Mode (`#0D1117`)
+- [x] Sistema de temas dinámicos (4 esquemas × 5 intensidades)
 
-#### Semana 2 (25 Nov - 1 Dic)
-- [ ] Crear página de login para profesores
-- [ ] Implementar protección de rutas (middleware)
-- [ ] Crear dashboard principal del profesor
-- [ ] Implementar CRUD básico de Cursos (UI + Firestore)
-- [ ] Crear contexto de autenticación global
-- [ ] Testing de autenticación y autorización
+#### Semana 2 (25 Nov - 1 Dic) - ✅ COMPLETADA
+- [x] Crear página de login para profesores
+- [x] Implementar protección de rutas (middleware)
+- [x] Crear dashboard principal del profesor
+- [x] Crear contexto de autenticación global
+- [x] Foto de perfil de Google en dashboard
+- [x] Reemplazo de emojis por iconos (Lucide React)
+- [ ] Implementar CRUD básico de Cursos (UI + Firestore) - **SIGUIENTE**
 
 ---
 

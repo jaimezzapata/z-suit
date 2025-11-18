@@ -3,10 +3,9 @@
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { BookOpen, Brain, Github, Rocket } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
-import { ThemeSelector } from '@/components/ThemeSelector';
+import { DashboardNav } from '@/components/DashboardNav';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
@@ -31,50 +30,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[var(--bg-darkest)]">
-      {/* Header */}
-      <header className="bg-[var(--bg-dark)] border-b border-[var(--border-color)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold font-mono text-[var(--accent-primary)]">
-                &gt; Z-SUIT_
-              </h1>
-            </div>
-            
-            <div className="flex items-center gap-4">
-              <ThemeSelector />
-              <div className="text-right">
-                <p className="text-sm text-[var(--text-primary)] font-medium">
-                  {user?.displayName || 'Profesor'}
-                </p>
-                <p className="text-xs text-[var(--text-secondary)]">
-                  {user?.email}
-                </p>
-              </div>
-              
-              {/* Avatar */}
-              {user?.photoURL ? (
-                <img 
-                  src={user.photoURL} 
-                  alt="Avatar" 
-                  className="w-10 h-10 rounded-full border-2 border-[var(--accent-primary)] object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              ) : (
-                <div className="w-10 h-10 rounded-full border-2 border-[var(--accent-primary)] bg-[var(--accent-primary)] flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">
-                    {user?.displayName?.charAt(0)?.toUpperCase() || 'P'}
-                  </span>
-                </div>
-              )}
-              
-              <Button variant="ghost" size="sm" onClick={handleLogout}>
-                Salir
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardNav />
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -98,8 +54,13 @@ export default function DashboardPage() {
             <p className="text-[var(--text-secondary)] text-sm mb-4">
               Crea y edita documentación en Markdown para tus cursos.
             </p>
-            <Button variant="secondary" size="sm" className="w-full">
-              Ir a Docs
+            <Button 
+              variant="secondary" 
+              size="sm" 
+              className="w-full"
+              onClick={() => router.push('/dashboard/courses')}
+            >
+              Ir a Cursos
             </Button>
           </Card>
 
