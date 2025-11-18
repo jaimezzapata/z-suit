@@ -342,10 +342,10 @@ Abre un issue en GitHub con:
 **Jaime Zapata**  
 *Profesor de Tecnología & Full-Stack Developer*
 
-- 🌐 **Portfolio:** [jaimezapata.dev](https://jaimezapata.dev) *(placeholder)*
-- 💼 **LinkedIn:** [linkedin.com/in/jaimezapata](https://linkedin.com/in/jaimezapata) *(placeholder)*
-- 🐙 **GitHub:** [@jaimezapata](https://github.com/jaimezapata) *(placeholder)*
-- 📧 **Email:** jaime.zapata@edu.co *(placeholder)*
+<!-- - 🌐 **Portfolio:** [jaimezapata.dev](https://jaimezapata.dev) *(placeholder)* -->
+<!-- - 💼 **LinkedIn:** [linkedin.com/in/jaimezapata](https://linkedin.com/in/jaimezapata) *(placeholder)* -->
+- 🐙 **GitHub:** [@jaimezapata](https://github.com/jaimezzapata) *(placeholder)*
+<!-- - 📧 **Email:** jaime.zapata@edu.co *(placeholder)* -->
 
 ### Sobre el Proyecto
 Z-SUIT nace de la necesidad personal de optimizar mi flujo de trabajo como profesor de tecnología. Después de años creando exámenes manualmente y gestionando entregas en múltiples plataformas, decidí construir una solución que centralizara todo en un solo lugar.
