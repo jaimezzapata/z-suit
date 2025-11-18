@@ -210,3 +210,211 @@ export const getDocumentById = async (collectionName, docId) => {
     return { success: false, error: error.message };
   }
 };
+
+// ===== EXAMS =====
+
+// Generar código de acceso para examen (diferente formato que cursos)
+const generateExamAccessCode = () => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Sin I, O, 0, 1
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
+
+export const createExam = async (profesorId, examData) => {
+  try {
+    const docRef = await addDoc(collection(db, 'exams'), {
+      profesorId,
+      courseId: examData.courseId,
+      title: examData.title,
+      accessCode: generateExamAccessCode(),
+      questionCount: examData.questionCount,
+      timeLimit: examData.timeLimit, // en minutos
+      tolerance: examData.tolerance, // número de infracciones permitidas
+      generateWithAI: examData.generateWithAI,
+      status: 'draft', // draft, active, closed
+      questions: [], // Se llenará después con la generación IA
+      attempts: 0,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error('Error creating exam:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getExamsByCourse = async (courseId) => {
+  try {
+    const q = query(
+      collection(db, 'exams'),
+      where('courseId', '==', courseId),
+      orderBy('createdAt', 'desc')
+    );
+    const snapshot = await getDocs(q);
+    const exams = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return { success: true, data: exams };
+  } catch (error) {
+    console.error('Error fetching exams:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getExamsByProfesor = async (profesorId) => {
+  try {
+    const q = query(
+      collection(db, 'exams'),
+      where('profesorId', '==', profesorId)
+    );
+    const snapshot = await getDocs(q);
+    const exams = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    // Ordenar manualmente en JavaScript
+    exams.sort((a, b) => {
+      const timeA = a.createdAt?.toMillis?.() || 0;
+      const timeB = b.createdAt?.toMillis?.() || 0;
+      return timeB - timeA;
+    });
+    return { success: true, data: exams };
+  } catch (error) {
+    console.error('Error fetching exams:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getExamByAccessCode = async (accessCode) => {
+  try {
+    const q = query(
+      collection(db, 'exams'),
+      where('accessCode', '==', accessCode.toUpperCase())
+    );
+    const snapshot = await getDocs(q);
+    
+    if (snapshot.empty) {
+      return { success: false, error: 'Código de acceso no válido' };
+    }
+
+    const examDoc = snapshot.docs[0];
+    return {
+      success: true,
+      data: { id: examDoc.id, ...examDoc.data() }
+    };
+  } catch (error) {
+    console.error('Error fetching exam:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const updateExam = async (examId, data) => {
+  try {
+    const docRef = doc(db, 'exams', examId);
+    await updateDoc(docRef, {
+      ...data,
+      updatedAt: Timestamp.now(),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating exam:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const deleteExam = async (examId) => {
+  try {
+    await deleteDoc(doc(db, 'exams', examId));
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting exam:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+// Crear intento de examen (cuando un estudiante empieza)
+export const createExamAttempt = async (examId, studentEmail, studentName = '') => {
+  try {
+    const docRef = await addDoc(collection(db, 'examAttempts'), {
+      examId,
+      studentEmail,
+      studentName,
+      answers: {},
+      proctoringLogs: [],
+      startedAt: Timestamp.now(),
+      submittedAt: null,
+      score: null,
+      penaltyScore: 0,
+      status: 'in-progress',
+      visibilityWarnings: 0,
+      submissionReason: null,
+      autoSubmitted: false,
+    });
+
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error('Error creating exam attempt:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getExamAttempts = async (examId) => {
+  try {
+    const q = query(
+      collection(db, 'examAttempts'),
+      where('examId', '==', examId)
+    );
+    const snapshot = await getDocs(q);
+    const attempts = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    // Ordenar manualmente
+    attempts.sort((a, b) => {
+      const timeA = a.startedAt?.toMillis?.() || 0;
+      const timeB = b.startedAt?.toMillis?.() || 0;
+      return timeB - timeA;
+    });
+    return { success: true, data: attempts };
+  } catch (error) {
+    console.error('Error fetching exam attempts:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const getExamAttemptsByStudent = async (examId, studentEmail) => {
+  try {
+    const q = query(
+      collection(db, 'examAttempts'),
+      where('examId', '==', examId),
+      where('studentEmail', '==', studentEmail)
+    );
+    const snapshot = await getDocs(q);
+    const attempts = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return { success: true, data: attempts };
+  } catch (error) {
+    console.error('Error fetching student exam attempts:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const updateExamAttempt = async (attemptId, data) => {
+  try {
+    const docRef = doc(db, 'examAttempts', attemptId);
+    await updateDoc(docRef, data);
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating exam attempt:', error);
+    return { success: false, error: error.message };
+  }
+};
+

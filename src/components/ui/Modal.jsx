@@ -24,7 +24,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', fullHeigh
       
       {/* Modal */}
       <div className={`relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg ${sizes[size]} w-full ${
-        fullHeight ? 'h-[85vh]' : 'max-h-[85vh]'
+        fullHeight ? 'h-[90vh]' : 'max-h-[90vh]'
       } flex flex-col overflow-hidden shadow-2xl`}>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[var(--border-color)] flex-shrink-0">
@@ -40,7 +40,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', fullHeigh
         </div>
         
         {/* Content */}
-        <div className={`${fullHeight ? 'flex-1 overflow-hidden' : 'overflow-y-auto'} p-6`}>
+        <div className={`flex-1 overflow-y-auto p-6`}>
           {children}
         </div>
       </div>

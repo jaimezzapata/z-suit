@@ -1,9 +1,9 @@
 'use client';
 
-import { BookOpen, Search, Moon, Sun } from 'lucide-react';
+import { BookOpen, Search, Moon, Sun, Menu } from 'lucide-react';
 import { useState } from 'react';
 
-export function CourseHeader({ course, currentSession, totalSessions, onSearch }) {
+export function CourseHeader({ course, currentSession, totalSessions, onSearch, onToggleSidebar }) {
   const [darkMode, setDarkMode] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -13,6 +13,15 @@ export function CourseHeader({ course, currentSession, totalSessions, onSearch }
         <div className="flex items-center justify-between">
           {/* Logo + Course Info */}
           <div className="flex items-center gap-3">
+            {onToggleSidebar && (
+              <button
+                onClick={onToggleSidebar}
+                className="lg:hidden p-2 rounded-lg hover:bg-[var(--bg-medium)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] transition-colors"
+                title="Menú"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            )}
             <BookOpen className="w-8 h-8 text-[var(--accent-primary)]" />
             <div>
               <h1 className="text-xl font-bold text-[var(--text-primary)]">
