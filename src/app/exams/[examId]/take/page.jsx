@@ -45,6 +45,12 @@ export default function TakeExamPage() {
   const answersRef = useRef({});
   const submittingRef = useRef(false);
 
+  // Sincronizar answers con answersRef cada vez que cambie
+  useEffect(() => {
+    answersRef.current = answers;
+    console.log('Answers synced to ref:', answers);
+  }, [answers]);
+
   useEffect(() => {
     if (!studentEmail || !studentName) {
       router.push('/exams/access');
@@ -204,12 +210,10 @@ export default function TakeExamPage() {
       [questionId]: optionIndex
     };
     setAnswers(newAnswers);
-    answersRef.current = newAnswers;
     console.log('Answer selected:', {
       questionId,
       optionIndex,
-      newAnswers,
-      answersRefUpdated: answersRef.current
+      newAnswers
     });
   };
 
