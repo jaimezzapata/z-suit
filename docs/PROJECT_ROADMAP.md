@@ -1,6 +1,6 @@
 # Z-SUIT - Cronograma y Tareas del Proyecto
 
-**Versión:** 1.1  
+**Versión:** 1.2  
 **Fecha de Inicio:** 17 de noviembre de 2025  
 **Fecha Actual:** 18 de noviembre de 2025  
 **Deadline MVP:** 26 de enero de 2026  
@@ -30,7 +30,7 @@ _17 Nov - 1 Dic 2025_
 - [x] Foto de perfil de Google en dashboard
 - [x] Reemplazo de emojis por iconos (Lucide React)
 
-#### Semana 2 (25 Nov - 1 Dic) - 🚧 EN PROGRESO (70%)
+#### Semana 2 (25 Nov - 1 Dic) - 🚧 EN PROGRESO (75%)
 
 - [x] Implementar CRUD completo de Cursos
 - [x] Crear curso con tipo (Regular: 18 sesiones / Empresarial: 7 sesiones)
@@ -179,7 +179,7 @@ _20 Ene - 26 Ene 2026_
 | Fecha      | Hito                            | Estado | Descripción                                 |
 | ---------- | ------------------------------- | ------ | ------------------------------------------- |
 | **1 Dic**  | Auth + Cursos Funcionando       | ✅ ✓   | Sistema de login y gestión básica de cursos |
-| **15 Dic** | Módulo Docs Completo            | 🚧 70% | Editor MD + Vista estudiante funcional      |
+| **15 Dic** | Módulo Docs Completo            | 🚧 75% | Editor MD + Vista estudiante funcional      |
 | **5 Ene**  | Sistema de Proctoring Operativo | ⏳     | Anti-cheat implementado y probado           |
 | **12 Ene** | GitHub Grader Completo          | ⏳     | Flujo completo de entrega/calificación      |
 | **19 Ene** | Integración Finalizada          | ⏳     | Todos los módulos trabajando juntos         |
@@ -216,10 +216,13 @@ _20 Ene - 26 Ene 2026_
 ### **C. Módulo de Cursos** - ✅ COMPLETADO (100%)
 
 - [x] UI para crear curso (modal con preview)
-- [x] Tipo de curso: Regular (18 sesiones) / Empresarial (7 sesiones)
+- [x] Tipo de curso: Regular (18 sesiónes) / Empresarial (7 sesiónes)
 - [x] UI para listar cursos (diseño horizontal con tarjetas)
-- [x] Estadísticas visuales (progreso, sesiones, badges)
-- [x] UI para editar curso
+- [x] Estadísticas visuales (progreso, sesiónes, badges)
+- [x] Agrupación jerárquica (por año y nivel)
+- [x] Headers visuales con contadores por grupo
+- [x] UI para editar curso (modal + inline)
+- [x] Edición inline desde tarjetas (click en campos)
 - [x] UI para eliminar curso (con confirmación)
 - [x] Firestore CRUD operations
 - [x] Asociar cursos al `profesorId`
@@ -227,10 +230,10 @@ _20 Ene - 26 Ene 2026_
 - [x] Sistema de códigos de acceso únicos
 - [x] Gestión de visibilidad (Público/Privado)
 - [x] Generación automática de slugs
-- [x] Vista de gestión de sesiones por curso
+- [x] Vista de gestión de sesiónes por curso
 - [x] Modal adaptable (fullHeight prop)
 
-### **D. Módulo de Documentación** - 🚧 EN PROGRESO (70%)
+### **D. Módulo de Documentación** - 🚧 EN PROGRESO (75%)
 
 - [x] Editor de Markdown integrado en sesiones
 - [x] Integrar `react-markdown` + `remark-gfm`
@@ -344,10 +347,21 @@ _20 Ene - 26 Ene 2026_
 ### **G. Funcionalidades Adicionales Implementadas** ✅
 
 - [x] Panel de Superadmin (`/dashboard/admin`)
-- [x] Estadísticas del sistema (cursos, usuarios, sesiones, exámenes)
+- [x] Estadísticas del sistema (cursos, usuarios, sesiónes, exámenes)
 - [x] Eliminación masiva de datos con confirmación
 - [x] Protección contra eliminación de superadmins
 - [x] Sistema de roles (superadmin/profesor)
+- [x] Dashboard principal con estadísticas dinámicas
+  * Contador de cursos activos (carga asíncrona)
+  * Contador de sesiónes documentadas
+  * Integración con Firestore en tiempo real
+- [x] Animación tipo terminal en logo
+  * Efecto de escritura letra por letra
+  * Cursor parpadeante continuo
+  * Animación CSS con @keyframes
+- [x] Sistema de sincronización con archivos locales
+  * API `/api/save-markdown` para Load/Save
+  * Gestión de carpeta `/docs` local
 - [x] Sistema de archivos locales (carpeta `/docs`)
 - [x] Estructura flexible: `/docs/[courseId|code|slug]/XX-titulo.md`
 - [x] Sincronización bidireccional con Firestore
