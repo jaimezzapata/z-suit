@@ -43,13 +43,6 @@ export default function TakeExamPage() {
   const isProcessingVisibilityRef = useRef(false);
   const examRef = useRef(null);
   const answersRef = useRef({});
-  const submittingRef = useRef(false);
-
-  // Sincronizar answers con answersRef cada vez que cambie
-  useEffect(() => {
-    answersRef.current = answers;
-    console.log('Answers synced to ref:', answers);
-  }, [answers]);
 
   useEffect(() => {
     if (!studentEmail || !studentName) {
@@ -119,7 +112,7 @@ export default function TakeExamPage() {
 
     // Detectar cambio de ventana/tab
     const handleVisibilityChange = () => {
-      if (document.hidden && !isProcessingVisibilityRef.current && !submittingRef.current) {
+      if (document.hidden && !isProcessingVisibilityRef.current) {
         isProcessingVisibilityRef.current = true;
         
         setTimeout(() => {
@@ -134,19 +127,14 @@ export default function TakeExamPage() {
             console.log('3 warnings reached, triggering auto-submit');
             // Bloquear interfaz inmediatamente
             setAutoSubmitting(true);
-            // Limpiar listeners inmediatamente para evitar más detecciones
+            // Limpiar listeners inmediatamente
             document.removeEventListener('visibilitychange', handleVisibilityChange);
-            document.removeEventListener('copy', preventCopyPaste);
-            document.removeEventListener('paste', preventCopyPaste);
-            document.removeEventListener('cut', preventCopyPaste);
             // Auto-enviar por violaciones
             setTimeout(() => handleAutoSubmit('visibility_violations'), 100);
-            // Retornar 3 para que no incremente más
-            return 3;
           } else {
             setShowVisibilityModal(true);
-            return newCount;
           }
+          return newCount;
         });
       }
     };
@@ -194,10 +182,11 @@ export default function TakeExamPage() {
         }
         
         // Crear intento de examen
-        const attemptResult = await createExamAttempt(params.examId, studentEmail, studentName);
+        const attemptResult = await createExamAttempt(params.examId, studentEmail);
         if (attemptResult.success) {
           setAttemptId(attemptResult.id);
-          console.log('Exam attempt created:', attemptResult.id);
+          // Guardar nombre del estudiante
+          await updateExamAttempt(attemptResult.id, { studentName });
         }
       }
     } catch (error) {
@@ -214,24 +203,14 @@ export default function TakeExamPage() {
       [questionId]: optionIndex
     };
     setAnswers(newAnswers);
-    console.log('Answer selected:', {
-      questionId,
-      optionIndex,
-      newAnswers
-    });
+    answersRef.current = newAnswers;
   };
 
   const handleAutoSubmit = async (reason = 'timeout') => {
-    // Prevenir llamadas duplicadas usando ref
-    if (submittingRef.current || submitting) {
-      console.log('Already submitting (ref check), ignoring duplicate call', {
-        submittingRef: submittingRef.current,
-        submitting
-      });
-      return;
-    }
-    
     console.log('handleAutoSubmit called with reason:', reason);
+    console.log('Current submitting state:', submitting);
+    console.log('Exam exists:', !!exam);
+    console.log('Questions exist:', exam?.questions?.length);
     
     cleanup();
     await submitExam(true, reason);
@@ -251,71 +230,41 @@ export default function TakeExamPage() {
     const currentExam = examRef.current || exam;
     const currentAnswers = answersRef.current || answers;
     
-    console.log('submitExam called with:', {
-      autoSubmit,
-      reason,
-      answersRefCurrent: answersRef.current,
-      answersState: answers,
-      currentAnswers: currentAnswers,
-      submittingRef: submittingRef.current,
-      submitting
-    });
-    
-    // Doble validación: estado Y ref para prevenir duplicados
-    if (submittingRef.current || submitting || !currentExam || !currentExam.questions) {
-      console.log('Cannot submit:', { 
-        submittingRef: submittingRef.current,
-        submitting, 
-        hasExam: !!currentExam, 
-        hasQuestions: !!currentExam?.questions 
-      });
+    if (submitting || !currentExam || !currentExam.questions) {
+      console.log('Cannot submit:', { submitting, hasExam: !!currentExam, hasQuestions: !!currentExam?.questions });
       return;
     }
-    
-    // Marcar como submitting INMEDIATAMENTE (ref primero, luego estado)
-    submittingRef.current = true;
     setSubmitting(true);
-    setAutoSubmitting(true);
 
     try {
-      // Crear objeto de respuestas completo - incluir TODAS las preguntas
-      // Si una pregunta no tiene respuesta, se marca como null
-      const completeAnswers = {};
-      currentExam.questions.forEach(question => {
-        completeAnswers[question.id] = currentAnswers[question.id] !== undefined 
-          ? currentAnswers[question.id] 
-          : null; // null indica que no respondió
-      });
-
       // Calcular puntaje - Las preguntas sin responder cuentan como incorrectas
       let correctAnswers = 0;
       const totalQuestions = currentExam.questions.length;
 
       currentExam.questions.forEach(question => {
-        const studentAnswer = completeAnswers[question.id];
+        const studentAnswer = currentAnswers[question.id];
         // Solo cuenta como correcta si existe la respuesta Y es correcta
-        if (studentAnswer !== null && studentAnswer === question.correctAnswer) {
+        if (studentAnswer !== undefined && studentAnswer === question.correctAnswer) {
           correctAnswers++;
         }
+        // Las preguntas sin responder (undefined) se cuentan automáticamente como incorrectas
       });
 
       const score = (correctAnswers / totalQuestions) * 5.0;
 
-      console.log('Submitting exam with complete data...', { 
+      console.log('Submitting exam...', { 
         attemptId, 
         score, 
         reason,
         totalQuestions,
         correctAnswers,
-        answeredQuestions: Object.keys(currentAnswers).length,
-        completeAnswers: completeAnswers,
-        originalAnswers: currentAnswers
+        answeredQuestions: Object.keys(currentAnswers).length
       });
 
-      // Actualizar intento con respuestas y puntaje (USAR completeAnswers)
+      // Actualizar intento con respuestas y puntaje
       if (attemptId) {
         await updateExamAttempt(attemptId, {
-          answers: completeAnswers,  // USAR completeAnswers con todas las preguntas
+          answers: answers,
           submittedAt: new Date(),
           score: score,
           status: 'submitted',
@@ -332,7 +281,7 @@ export default function TakeExamPage() {
             attemptId,
             examId: params.examId,
             studentEmail,
-            answers: completeAnswers,  // USAR completeAnswers
+            answers,
             score
           })
         }).catch(err => console.error('Error generating feedback:', err));
