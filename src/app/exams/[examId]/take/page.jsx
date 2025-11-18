@@ -205,16 +205,24 @@ export default function TakeExamPage() {
     };
     setAnswers(newAnswers);
     answersRef.current = newAnswers;
+    console.log('Answer selected:', {
+      questionId,
+      optionIndex,
+      newAnswers,
+      answersRefUpdated: answersRef.current
+    });
   };
 
   const handleAutoSubmit = async (reason = 'timeout') => {
     // Prevenir llamadas duplicadas usando ref
-    if (submittingRef.current) {
-      console.log('Already submitting (ref check), ignoring duplicate call');
+    if (submittingRef.current || submitting) {
+      console.log('Already submitting (ref check), ignoring duplicate call', {
+        submittingRef: submittingRef.current,
+        submitting
+      });
       return;
     }
     
-    submittingRef.current = true;
     console.log('handleAutoSubmit called with reason:', reason);
     
     cleanup();
@@ -234,6 +242,16 @@ export default function TakeExamPage() {
   const submitExam = async (autoSubmit = false, reason = 'manual') => {
     const currentExam = examRef.current || exam;
     const currentAnswers = answersRef.current || answers;
+    
+    console.log('submitExam called with:', {
+      autoSubmit,
+      reason,
+      answersRefCurrent: answersRef.current,
+      answersState: answers,
+      currentAnswers: currentAnswers,
+      submittingRef: submittingRef.current,
+      submitting
+    });
     
     // Doble validación: estado Y ref para prevenir duplicados
     if (submittingRef.current || submitting || !currentExam || !currentExam.questions) {
