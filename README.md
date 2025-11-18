@@ -37,25 +37,32 @@ Reducir drásticamente el tiempo invertido en:
 - ✅ Autenticación segura (Google / Email)
 - ✅ Crear y gestionar cursos/materias
 - ✅ Editor de documentación en Markdown
+- ✅ Generar documentación con IA (Gemini)
 - ✅ Generar preguntas de examen con IA
 - ✅ Configurar exámenes con códigos de acceso
+- ✅ Dashboard de resultados con estadísticas
+- ✅ Generación automática de retroalimentación con IA
 - ✅ Crear tareas de GitHub
 - ✅ Calificar y enviar feedback a estudiantes
 
 ### Para Estudiantes
-- ✅ Acceder a documentación del curso
+- ✅ Acceder a documentación del curso (Markdown renderizado)
 - ✅ Presentar exámenes en entorno seguro (anti-fraude)
-- ✅ Consultar docs internas durante exámenes
+- ✅ Consultar documentación durante exámenes
 - ✅ Entregar repositorios de GitHub
 - ✅ Recibir feedback por email
 
 ### Sistema de Proctoring (Anti-Cheat)
-- 🔒 Modo Fullscreen obligatorio
-- 👁️ Detección de pérdida de foco (cambio de pestaña/ventana)
-- 📋 Detección de eventos de clipboard (copy/paste)
-- ⚖️ Margen de tolerancia configurable
-- 📊 Logs detallados de comportamiento
+- ✅ Detección de pérdida de foco (cambio de pestaña/ventana)
+- ✅ Sistema de advertencias (máximo 3)
+- ✅ Auto-envío al detectar 3 cambios de ventana
+- ✅ Bloqueo de copiar/pegar/cortar
+- ✅ Deshabilitar menú contextual (clic derecho)
+- ✅ Monitoreo de inactividad (5 minutos máximo)
+- ✅ Timer con auto-envío al finalizar
+- ✅ Logs detallados de comportamiento (visibilityWarnings, submissionReason)
 - ✅ Acceso permitido a documentación interna del curso
+- ✅ Pantalla de bloqueo al alcanzar límite de advertencias
 
 ---
 
@@ -90,10 +97,37 @@ Reducir drásticamente el tiempo invertido en:
 Collections:
 ├── users/              // Profesores
 ├── courses/            // Cursos/Materias
-├── documentation/      // Docs en Markdown
-├── questionBanks/      // Banco de preguntas IA
+│   └── sessions[]      // Sesiones con documentación
 ├── exams/              // Configuración de exámenes
-├── examAttempts/       // Entregas + logs de proctoring
+│   ├── title           // Título del examen
+│   ├── courseId        // Referencia al curso
+│   ├── profesorId      // ID del profesor
+│   ├── accessCode      // Código de 8 caracteres
+│   ├── questionCount   // Cantidad de preguntas
+│   ├── timeLimit       // Tiempo en minutos
+│   ├── tolerance       // Tolerancia de advertencias (deprecated)
+│   ├── generateWithAI  // Boolean para generación IA
+│   ├── status          // draft | active | closed
+│   └── questions[]     // Array de preguntas generadas
+│       ├── id          // UUID de pregunta
+│       ├── question    // Texto de la pregunta
+│       ├── options[]   // Opciones de respuesta
+│       ├── correctAnswer // Índice de respuesta correcta
+│       ├── explanation // Explicación de la respuesta
+│       └── difficulty  // easy | medium | hard
+├── examAttempts/       // Intentos de estudiantes
+│   ├── examId          // Referencia al examen
+│   ├── studentEmail    // Email del estudiante
+│   ├── studentName     // Nombre completo
+│   ├── answers{}       // Objeto con respuestas {questionId: optionIndex}
+│   ├── score           // Calificación sobre 5.0
+│   ├── status          // in-progress | submitted
+│   ├── autoSubmitted   // Boolean si fue auto-enviado
+│   ├── submissionReason// manual | timeout | inactivity | visibility_violations
+│   ├── visibilityWarnings // Cantidad de cambios de ventana detectados
+│   ├── feedback        // Retroalimentación generada por IA
+│   ├── createdAt       // Timestamp de inicio
+│   └── submittedAt     // Timestamp de envío
 ├── githubAssignments/  // Tareas de GitHub
 └── githubSubmissions/  // Entregas de repos
 ```
@@ -287,23 +321,30 @@ z-suit/
 ├── src/
 │   ├── app/                    # Next.js App Router
 │   │   ├── (auth)/            # Rutas de autenticación
-│   │   ├── (dashboard)/       # Dashboard profesor
-│   │   ├── courses/           # Gestión de cursos
-│   │   ├── exam/              # Vista de examen estudiante
+│   │   ├── dashboard/         # Dashboard profesor
+│   │   │   ├── courses/       # Gestión de cursos
+│   │   │   └── exams/         # Gestión de exámenes
+│   │   │       ├── page.jsx   # Lista de exámenes
+│   │   │       └── [examId]/
+│   │   │           └── results/ # Resultados y estadísticas
+│   │   ├── exams/             # Vistas de estudiante
+│   │   │   ├── access/        # Acceso con código
+│   │   │   └── [examId]/
+│   │   │       ├── take/      # Presentación del examen
+│   │   │       └── submitted/ # Confirmación de envío
 │   │   └── api/               # API routes
+│   │       ├── generate-questions/ # Generar preguntas con IA
+│   │       └── generate-feedback/  # Generar retroalimentación
 │   ├── components/            # Componentes React
-│   │   ├── ui/               # Componentes base (Button, Input...)
-│   │   ├── editor/           # Editor Markdown
-│   │   ├── exam/             # Componentes de examen
-│   │   └── proctoring/       # Sistema anti-fraude
+│   │   ├── ui/               # Componentes base (Button, Modal, Input...)
+│   │   ├── courses/          # Componentes de cursos
+│   │   ├── exams/            # Componentes de exámenes
+│   │   │   └── ExamForm.jsx  # Formulario de creación
+│   │   └── documentation/    # Renderizado de Markdown
 │   ├── lib/                   # Utilidades
-│   │   ├── firebase/         # Config y helpers Firebase
-│   │   ├── ai/               # Integración IA
-│   │   └── utils/            # Funciones helpers
+│   │   └── firebase/         # Config y helpers Firebase
+│   │       └── firestore.js  # Funciones CRUD
 │   └── context/              # React Context (Auth, etc.)
-├── functions/                 # Firebase Functions
-│   ├── generateQuestions.js  # Generar preguntas con IA
-│   └── sendGradeFeedback.js  # Enviar emails
 ├── public/                    # Assets estáticos
 ├── docs/                      # Documentación del proyecto
 └── README.md                  # Este archivo
@@ -362,13 +403,30 @@ Este proyecto está bajo la licencia **MIT**. Ver archivo `LICENSE` para más de
 
 ## 🗺️ Roadmap Post-MVP
 
+### Completado ✅
+- ✅ Sistema completo de autenticación
+- ✅ Gestión de cursos y sesiones
+- ✅ Editor de documentación Markdown
+- ✅ Generación de documentación con IA (Gemini)
+- ✅ Sistema de exámenes con códigos de acceso
+- ✅ Generación automática de preguntas con IA
+- ✅ Interfaz de presentación de exámenes
+- ✅ Sistema antifraude completo (copy/paste, visibility, inactivity)
+- ✅ Auto-envío con pantalla de bloqueo
+- ✅ Calificación automática sobre 5.0
+- ✅ Generación de retroalimentación con IA
+- ✅ Dashboard de resultados con estadísticas
+
 ### v1.1 (Q1 2026)
+- [ ] **Envío de feedback por email** (Resend integration) 🎯 *Siguiente*
 - [ ] **Sistema de temas monocromáticos dinámicos** ⭐
 - [ ] Selector de color diario con persistencia
 - [ ] Exportar exámenes a PDF
 - [ ] Gráficos de analytics (rendimiento por curso)
 - [ ] Modo offline para documentación
 - [ ] Soporte para imágenes en Markdown
+- [ ] Edición manual de preguntas generadas
+- [ ] Banco de preguntas reutilizable
 
 ### v1.2 (Q2 2026)
 - [ ] Presets de colores favoritos (guardar paletas)
@@ -377,12 +435,15 @@ Este proyecto está bajo la licencia **MIT**. Ver archivo `LICENSE` para más de
 - [ ] Integración con Google Classroom
 - [ ] Comentarios inline en código (GitHub Grader)
 - [ ] Notificaciones push
+- [ ] Historial de exámenes por estudiante
 
 ### v2.0 (Q3 2026)
 - [ ] Evaluación de código en tiempo real (Code Runner)
 - [ ] Proctoring con cámara web (opcional)
 - [ ] Sistema de badges/gamificación
 - [ ] API pública para integraciones
+- [ ] Modo fullscreen obligatorio
+- [ ] Detección de múltiples monitores
 
 ---
 
