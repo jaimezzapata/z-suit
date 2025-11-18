@@ -1,13 +1,28 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { BookOpen, Brain, Github, Rocket } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { ThemeSelector } from '@/components/ThemeSelector';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
   const router = useRouter();
+
+  // Debug: Ver datos del usuario
+  useEffect(() => {
+    if (user) {
+      console.log('Usuario en dashboard:', {
+        displayName: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        uid: user.uid
+      });
+    }
+  }, [user]);
 
   const handleLogout = async () => {
     await logout();
@@ -36,13 +51,23 @@ export default function DashboardPage() {
                   {user?.email}
                 </p>
               </div>
-              {user?.photoURL && (
+              
+              {/* Avatar */}
+              {user?.photoURL ? (
                 <img 
                   src={user.photoURL} 
                   alt="Avatar" 
-                  className="w-10 h-10 rounded-full border-2 border-[var(--accent-primary)]"
+                  className="w-10 h-10 rounded-full border-2 border-[var(--accent-primary)] object-cover"
+                  referrerPolicy="no-referrer"
                 />
+              ) : (
+                <div className="w-10 h-10 rounded-full border-2 border-[var(--accent-primary)] bg-[var(--accent-primary)] flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">
+                    {user?.displayName?.charAt(0)?.toUpperCase() || 'P'}
+                  </span>
+                </div>
               )}
+              
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 Salir
               </Button>
@@ -65,7 +90,7 @@ export default function DashboardPage() {
         {/* Dashboard Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card 
-            title="📚 Documentación" 
+            title={<div className="flex items-center gap-2"><BookOpen className="w-5 h-5" /> Documentación</div>}
             subtitle="Gestiona el material de estudio"
             variant="primary"
             className="hover:scale-105 cursor-pointer transition-transform hover:border-[var(--accent-primary)]"
@@ -79,7 +104,7 @@ export default function DashboardPage() {
           </Card>
 
           <Card 
-            title="🧠 Evaluación IA" 
+            title={<div className="flex items-center gap-2"><Brain className="w-5 h-5" /> Evaluación IA</div>}
             subtitle="Exámenes con inteligencia artificial"
             variant="secondary"
             className="hover:scale-105 cursor-pointer transition-transform hover:border-[var(--accent-secondary)]"
@@ -93,7 +118,7 @@ export default function DashboardPage() {
           </Card>
 
           <Card 
-            title="💻 GitHub Grader" 
+            title={<div className="flex items-center gap-2"><Github className="w-5 h-5" /> GitHub Grader</div>}
             subtitle="Califica repositorios"
             variant="tertiary"
             className="hover:scale-105 cursor-pointer transition-transform hover:border-[var(--accent-tertiary)]"
@@ -128,7 +153,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Start Guide */}
-        <Card title="🚀 Comenzar" className="mt-8">
+        <Card title={<div className="flex items-center gap-2"><Rocket className="w-5 h-5" /> Comenzar</div>} className="mt-8">
           <ol className="space-y-3 text-[var(--text-secondary)]">
             <li className="flex items-start gap-3">
               <span className="font-mono text-[var(--accent-primary)] font-bold">1.</span>

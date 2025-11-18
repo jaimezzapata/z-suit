@@ -67,7 +67,7 @@ export function AuthProvider({ children }) {
       return { success: true, user: result.user };
     } catch (error) {
       console.error('Error en login con Google:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error.code || error.message };
     }
   };
 
@@ -87,7 +87,7 @@ export function AuthProvider({ children }) {
       return { success: true, user: result.user };
     } catch (error) {
       console.error('Error en login con email:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error.code || error.message };
     }
   };
 
@@ -110,7 +110,7 @@ export function AuthProvider({ children }) {
       return { success: true, user: result.user };
     } catch (error) {
       console.error('Error en registro:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error.code || error.message };
     }
   };
 

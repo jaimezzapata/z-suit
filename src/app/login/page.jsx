@@ -69,10 +69,11 @@ export default function LoginPage() {
   }, []);
 
   // Redirigir si ya está autenticado
-  if (user) {
-    router.push('/dashboard');
-    return null;
-  }
+  useEffect(() => {
+    if (user) {
+      router.push('/dashboard');
+    }
+  }, [user, router]);
 
   const handleGoogleLogin = async () => {
     setError('');
@@ -112,14 +113,18 @@ export default function LoginPage() {
     } else {
       const errorMessages = {
         'auth/invalid-email': 'Correo electrónico inválido',
-        'auth/user-not-found': 'Usuario no encontrado',
+        'auth/user-not-found': 'Usuario no encontrado. ¿Necesitas registrarte?',
         'auth/wrong-password': 'Contraseña incorrecta',
         'auth/email-already-in-use': 'Este correo ya está registrado',
         'auth/weak-password': 'La contraseña debe tener al menos 6 caracteres',
-        'auth/invalid-credential': 'Credenciales inválidas',
+        'auth/invalid-credential': 'Usuario no existe. Ve a la pestaña "Registrarse" para crear una cuenta',
+        'auth/missing-password': 'La contraseña es requerida',
+        'auth/too-many-requests': 'Demasiados intentos fallidos. Intenta más tarde',
+        'auth/network-request-failed': 'Error de conexión. Verifica tu internet',
       };
       
-      setError(errorMessages[result.error] || 'Error en la autenticación');
+      setError(errorMessages[result.error] || `Error: ${result.error}`);
+      console.error('Error de autenticación:', result.error);
     }
 
     setLoading(false);
