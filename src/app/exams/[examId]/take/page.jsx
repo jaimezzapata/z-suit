@@ -237,20 +237,29 @@ export default function TakeExamPage() {
     setSubmitting(true);
 
     try {
-      // Calcular puntaje
+      // Calcular puntaje - Las preguntas sin responder cuentan como incorrectas
       let correctAnswers = 0;
       const totalQuestions = currentExam.questions.length;
 
       currentExam.questions.forEach(question => {
         const studentAnswer = currentAnswers[question.id];
-        if (studentAnswer === question.correctAnswer) {
+        // Solo cuenta como correcta si existe la respuesta Y es correcta
+        if (studentAnswer !== undefined && studentAnswer === question.correctAnswer) {
           correctAnswers++;
         }
+        // Las preguntas sin responder (undefined) se cuentan automáticamente como incorrectas
       });
 
       const score = (correctAnswers / totalQuestions) * 5.0;
 
-      console.log('Submitting exam...', { attemptId, score, reason });
+      console.log('Submitting exam...', { 
+        attemptId, 
+        score, 
+        reason,
+        totalQuestions,
+        correctAnswers,
+        answeredQuestions: Object.keys(currentAnswers).length
+      });
 
       // Actualizar intento con respuestas y puntaje
       if (attemptId) {

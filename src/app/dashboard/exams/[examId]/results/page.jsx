@@ -164,8 +164,8 @@ export default function ExamResultsPage() {
           </div>
         )}
 
-        {/* Attempts List */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        {/* Attempts Table */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">
               Intentos de Estudiantes
@@ -180,93 +180,143 @@ export default function ExamResultsPage() {
               </p>
             </div>
           ) : (
-            <div className="divide-y divide-gray-200 dark:divide-gray-700">
-              {attempts.map((attempt) => (
-                <div key={attempt.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="font-medium text-gray-900 dark:text-white">
-                          {attempt.studentName || attempt.studentEmail}
-                        </span>
-                        {attempt.autoSubmitted && (
-                          <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded text-xs">
-                            {attempt.submissionReason === 'timeout' ? '⏱️ Tiempo agotado' :
-                             attempt.submissionReason === 'inactivity' ? '😴 Inactividad' :
-                             attempt.submissionReason === 'visibility_violations' ? '👁️ Violaciones' :
-                             'Auto-enviado'}
-                          </span>
-                        )}
-                        {attempt.visibilityWarnings > 0 && (
-                          <span className="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded text-xs">
-                            ⚠️ {attempt.visibilityWarnings} advertencias
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {attempt.studentEmail}
-                      </div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(attempt.submittedAt?.toDate?.() || attempt.submittedAt).toLocaleString('es-ES', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
-                      </div>
-                    </div>
-                    
-                    <div className="text-right">
-                      <div className={`text-3xl font-bold ${
-                        attempt.score >= 4.0 
-                          ? 'text-green-600 dark:text-green-400'
-                          : attempt.score >= 3.0
-                          ? 'text-yellow-600 dark:text-yellow-400'
-                          : 'text-red-600 dark:text-red-400'
-                      }`}>
-                        {attempt.score?.toFixed(2)}
-                      </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">/ 5.0</div>
-                    </div>
-                  </div>
-
-                  {attempt.feedback && (
-                    <div className="mb-4">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedAttempt(selectedAttempt?.id === attempt.id ? null : attempt)}
-                        className="mb-2"
-                      >
-                        {selectedAttempt?.id === attempt.id ? 'Ocultar' : 'Ver'} Retroalimentación
-                      </Button>
-
-                      {selectedAttempt?.id === attempt.id && (
-                        <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-                          <div className="prose dark:prose-invert max-w-none text-sm whitespace-pre-wrap">
-                            {attempt.feedback}
-                          </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Estudiante
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Calificación
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Estado
+                    </th>
+                    <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Advertencias
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Acciones
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                  {attempts.map((attempt) => (
+                    <tr key={attempt.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="font-medium text-gray-900 dark:text-white">
+                          {attempt.studentName || '-'}
                         </div>
-                      )}
-                    </div>
-                  )}
-
-                  {attempt.feedback && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSendFeedback(attempt)}
-                    >
-                      <Mail className="w-4 h-4 mr-2" />
-                      Enviar por Email
-                    </Button>
-                  )}
-                </div>
-              ))}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {attempt.studentEmail}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <div className={`text-2xl font-bold ${
+                          attempt.score >= 4 ? 'text-green-600 dark:text-green-400' :
+                          attempt.score >= 3 ? 'text-yellow-600 dark:text-yellow-400' :
+                          'text-red-600 dark:text-red-400'
+                        }`}>
+                          {attempt.score?.toFixed(2) || '0.00'}
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          / 5.0
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <div className="flex flex-col items-center gap-1">
+                          {attempt.autoSubmitted && (
+                            <span className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 rounded text-xs whitespace-nowrap">
+                              {attempt.submissionReason === 'timeout' ? '⏱️ Tiempo agotado' :
+                               attempt.submissionReason === 'inactivity' ? '😴 Inactividad' :
+                               attempt.submissionReason === 'visibility_violations' ? '👁️ Violaciones' :
+                               'Auto-enviado'}
+                            </span>
+                          )}
+                          {!attempt.autoSubmitted && (
+                            <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded text-xs">
+                              ✅ Manual
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        {attempt.visibilityWarnings > 0 ? (
+                          <span className="inline-flex items-center px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded text-xs font-semibold">
+                            {attempt.visibilityWarnings} cambios
+                          </span>
+                        ) : (
+                          <span className="text-gray-400 dark:text-gray-600 text-xs">
+                            Sin alertas
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          {attempt.feedback ? (
+                            <>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setSelectedAttempt(attempt)}
+                              >
+                                Ver Retroalimentación
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleSendFeedback(attempt)}
+                              >
+                                <Mail className="w-4 h-4 mr-1" />
+                                Enviar Email
+                              </Button>
+                            </>
+                          ) : (
+                            <span className="text-xs text-gray-500 dark:text-gray-400 italic">
+                              Sin retroalimentación
+                            </span>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>
+
+        {/* Modal de Retroalimentación */}
+        {selectedAttempt && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-hidden flex flex-col">
+              <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Retroalimentación - {selectedAttempt.studentName || selectedAttempt.studentEmail}
+                </h3>
+                <button
+                  onClick={() => setSelectedAttempt(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="p-6 overflow-y-auto">
+                <div className="prose dark:prose-invert max-w-none whitespace-pre-wrap">
+                  {selectedAttempt.feedback}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
