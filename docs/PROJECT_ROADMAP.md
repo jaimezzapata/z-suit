@@ -10,9 +10,11 @@
 ## 📅 Cronograma General
 
 ### **✅ Fase 1: Configuración y Fundamentos (Semana 1-2)** - COMPLETADA
-*18 Nov - 1 Dic 2025*
+
+_18 Nov - 1 Dic 2025_
 
 #### Semana 1 (18-24 Nov) - ✅ COMPLETADA
+
 - [x] Configurar Firebase en el proyecto Next.js
 - [x] Implementar Firebase Auth (Google + Email/Password)
 - [x] Diseñar schema de Firestore y crear reglas de seguridad
@@ -22,6 +24,7 @@
 - [x] Sistema de temas dinámicos (4 esquemas × 5 intensidades)
 
 #### Semana 2 (25 Nov - 1 Dic) - ✅ COMPLETADA
+
 - [x] Crear página de login para profesores
 - [x] Implementar protección de rutas (middleware)
 - [x] Crear dashboard principal del profesor
@@ -33,9 +36,11 @@
 ---
 
 ### **Fase 2: Módulo de Documentación (Semana 3-4)**
-*2 Dic - 15 Dic 2025*
+
+_2 Dic - 15 Dic 2025_
 
 #### Semana 3 (2-8 Dic)
+
 - [ ] Crear editor de Markdown con frontmatter
 - [ ] Integrar `react-markdown` y `gray-matter`
 - [ ] Implementar preview en tiempo real del Markdown
@@ -44,6 +49,7 @@
 - [ ] Asociar documentación a cursos (`courseId`)
 
 #### Semana 4 (9-15 Dic)
+
 - [ ] Crear vista pública de documentación para estudiantes
 - [ ] Implementar navegación entre documentos del curso
 - [ ] Añadir búsqueda dentro de la documentación
@@ -54,9 +60,11 @@
 ---
 
 ### **Fase 3: Módulo de Evaluación IA (Semana 5-7)**
-*16 Dic 2025 - 5 Ene 2026*
+
+_16 Dic 2025 - 5 Ene 2026_
 
 #### Semana 5 (16-22 Dic)
+
 - [ ] Configurar Firebase Functions
 - [ ] Integrar Gemini API o OpenAI API
 - [ ] Crear función serverless para generar preguntas
@@ -64,7 +72,8 @@
 - [ ] Crear interfaz de revisión de preguntas sugeridas
 - [ ] Implementar sistema de aprobación/edición/descarte
 
-#### Semana 6 (23-29 Dic) 🎄 *Semana Festiva - Trabajo Reducido*
+#### Semana 6 (23-29 Dic) 🎄 _Semana Festiva - Trabajo Reducido_
+
 - [ ] Crear configurador de exámenes (UI)
 - [ ] Implementar generación de `accessCode` único
 - [ ] Guardar configuración en Firestore (`exams/`)
@@ -72,7 +81,8 @@
 - [ ] Implementar timer del examen
 - [ ] Diseñar UI del examen (pregunta por pregunta)
 
-#### Semana 7 (30 Dic - 5 Ene) 🎉 *Año Nuevo - Trabajo Reducido*
+#### Semana 7 (30 Dic - 5 Ene) 🎉 _Año Nuevo - Trabajo Reducido_
+
 - [ ] **[CRÍTICO]** Implementar modo Fullscreen obligatorio
 - [ ] **[CRÍTICO]** Sistema de detección `visibilitychange`
 - [ ] **[CRÍTICO]** Detección de eventos de clipboard
@@ -84,9 +94,11 @@
 ---
 
 ### **Fase 4: Módulo GitHub Grader (Semana 8)**
-*6 Ene - 12 Ene 2026*
+
+_6 Ene - 12 Ene 2026_
 
 #### Semana 8 (6-12 Ene)
+
 - [ ] Crear CRUD de "Tareas de GitHub" (UI + Firestore)
 - [ ] Implementar formulario de entrega para estudiantes
 - [ ] Validar URLs de GitHub en el frontend
@@ -98,9 +110,11 @@
 ---
 
 ### **Fase 5: Integración y Pulido (Semana 9)**
-*13 Ene - 19 Ene 2026*
+
+_13 Ene - 19 Ene 2026_
 
 #### Semana 9 (13-19 Ene)
+
 - [ ] Integrar todos los módulos en el dashboard principal
 - [ ] Crear sistema de navegación entre módulos
 - [ ] Implementar notificaciones/feedback visual
@@ -113,9 +127,11 @@
 ---
 
 ### **Fase 6: Testing, Deploy y Lanzamiento (Semana 10)**
-*20 Ene - 26 Ene 2026*
+
+_20 Ene - 26 Ene 2026_
 
 #### Semana 10 (20-26 Ene) - **DEADLINE**
+
 - [ ] Testing exhaustivo de todos los módulos
 - [ ] Testing de proctoring en diferentes navegadores
 - [ ] Configurar reglas de seguridad de Firestore (producción)
@@ -131,20 +147,21 @@
 
 ## 🎯 Hitos Críticos
 
-| Fecha | Hito | Descripción |
-|-------|------|-------------|
-| **1 Dic** | Auth + Cursos Funcionando | Sistema de login y gestión básica de cursos |
-| **15 Dic** | Módulo Docs Completo | Editor MD + Vista estudiante funcional |
-| **5 Ene** | Sistema de Proctoring Operativo | Anti-cheat implementado y probado |
-| **12 Ene** | GitHub Grader Completo | Flujo completo de entrega/calificación |
-| **19 Ene** | Integración Finalizada | Todos los módulos trabajando juntos |
-| **26 Ene** | **LANZAMIENTO MVP** | Producto en producción listo para usar |
+| Fecha      | Hito                            | Descripción                                 |
+| ---------- | ------------------------------- | ------------------------------------------- |
+| **1 Dic**  | Auth + Cursos Funcionando       | Sistema de login y gestión básica de cursos |
+| **15 Dic** | Módulo Docs Completo            | Editor MD + Vista estudiante funcional      |
+| **5 Ene**  | Sistema de Proctoring Operativo | Anti-cheat implementado y probado           |
+| **12 Ene** | GitHub Grader Completo          | Flujo completo de entrega/calificación      |
+| **19 Ene** | Integración Finalizada          | Todos los módulos trabajando juntos         |
+| **26 Ene** | **LANZAMIENTO MVP**             | Producto en producción listo para usar      |
 
 ---
 
 ## 📋 Tareas por Módulo (Checklist Detallado)
 
 ### **A. Infraestructura Base**
+
 - [ ] Inicializar Firebase en Next.js
 - [ ] Configurar Firebase Auth (Google + Email/Password)
 - [ ] Crear collections en Firestore
@@ -156,6 +173,7 @@
 - [ ] Sistema de protección de rutas
 
 ### **B. Módulo de Autenticación**
+
 - [ ] Página de login (`/login`)
 - [ ] Lógica de login con Google
 - [ ] Lógica de login con Email/Password
@@ -165,6 +183,7 @@
 - [ ] Logout functionality
 
 ### **C. Módulo de Cursos**
+
 - [ ] UI para crear curso
 - [ ] UI para listar cursos
 - [ ] UI para editar curso
@@ -174,6 +193,7 @@
 - [ ] Validaciones de formulario
 
 ### **D. Módulo de Documentación**
+
 - [ ] Editor de Markdown (`/courses/[id]/docs/new`)
 - [ ] Integrar `gray-matter` para frontmatter
 - [ ] Preview en tiempo real
@@ -190,6 +210,7 @@
 ### **E. Módulo de Evaluación IA**
 
 #### E1. Generación de Preguntas
+
 - [ ] Firebase Function: `generateQuestions`
 - [ ] Integrar Gemini/OpenAI API
 - [ ] Parsear documentación como contexto
@@ -200,6 +221,7 @@
 - [ ] Filtrar preguntas por `courseId` y `status`
 
 #### E2. Configuración de Exámenes
+
 - [ ] UI para crear examen
 - [ ] Generar `accessCode` único (6 caracteres)
 - [ ] Configurar: tiempo, número de preguntas, tolerancia fraude
@@ -207,6 +229,7 @@
 - [ ] Guardar en `exams/`
 
 #### E3. Acceso y Presentación (Estudiante)
+
 - [ ] Página de acceso (`/exam/access`)
 - [ ] Validar `accessCode` + `email`
 - [ ] Crear registro en `examAttempts/`
@@ -218,6 +241,7 @@
 - [ ] Botón "Enviar Examen"
 
 #### E4. Sistema de Proctoring (Anti-Cheat)
+
 - [ ] Detectar salida de Fullscreen
 - [ ] Detectar `visibilitychange` (cambio de pestaña/ventana)
 - [ ] Detectar eventos de clipboard (`copy`, `paste`)
@@ -229,6 +253,7 @@
 - [ ] Modal de confirmación antes de enviar
 
 #### E5. Resultados y Dashboard
+
 - [ ] Calcular score automáticamente
 - [ ] Guardar respuestas en `examAttempts/`
 - [ ] Dashboard de resultados (profesor)
@@ -238,6 +263,7 @@
 ### **F. Módulo GitHub Grader**
 
 #### F1. Tareas de GitHub (Profesor)
+
 - [ ] UI para crear tarea GitHub
 - [ ] CRUD de `githubAssignments/`
 - [ ] Asociar a `courseId`
@@ -245,6 +271,7 @@
 - [ ] Lista de tareas por curso
 
 #### F2. Entregas (Estudiante)
+
 - [ ] Página de entrega (`/assignments/[id]/submit`)
 - [ ] Formulario: email + repo URL
 - [ ] Validar formato de URL de GitHub
@@ -252,6 +279,7 @@
 - [ ] Confirmación de entrega
 
 #### F3. Calificación (Profesor)
+
 - [ ] Dashboard de entregas (`/assignments/[id]/submissions`)
 - [ ] Listar todas las entregas
 - [ ] Abrir repo en nueva pestaña
@@ -260,6 +288,7 @@
 - [ ] Botón "Enviar Feedback"
 
 #### F4. Notificaciones
+
 - [ ] Firebase Function: `sendGradeFeedback`
 - [ ] Integrar Resend API
 - [ ] Template de email profesional
@@ -268,6 +297,7 @@
 - [ ] Confirmación visual en UI
 
 ### **G. Integración y UX**
+
 - [ ] Dashboard unificado con todos los módulos
 - [ ] Sistema de navegación intuitivo
 - [ ] Breadcrumbs de navegación
@@ -279,6 +309,7 @@
 - [ ] Accesibilidad básica (ARIA labels)
 
 ### **H. Testing y QA**
+
 - [ ] Testing de autenticación
 - [ ] Testing de CRUD de cursos
 - [ ] Testing de editor Markdown
@@ -291,6 +322,7 @@
 - [ ] Testing de envío de emails
 
 ### **I. Deployment y Producción**
+
 - [ ] Configurar Firebase project (producción)
 - [ ] Configurar reglas de seguridad Firestore
 - [ ] Deploy Firebase Functions
@@ -307,16 +339,19 @@
 ## 🔥 Prioridades por Riesgo
 
 ### **Alta Prioridad (Riesgo Alto)**
+
 1. **Sistema de Proctoring** - Tecnología compleja, requiere testing extensivo
 2. **Integración IA** - Dependencia externa, puede tener latencia
 3. **Firebase Functions** - Requiere despliegue separado, debugging complejo
 
 ### **Prioridad Media (Riesgo Medio)**
+
 4. **Editor Markdown** - UX crítica pero tecnología conocida
 5. **Autenticación** - Bien documentado pero crítico para seguridad
 6. **GitHub Grader** - Relativamente simple pero importante
 
 ### **Prioridad Baja (Riesgo Bajo)**
+
 7. **UI/Estilos** - Iterativo, se puede ajustar continuamente
 8. **Notificaciones Email** - Nice to have, puede simplificarse
 9. **Analytics** - Opcional para MVP
@@ -340,6 +375,7 @@
 ## 🛠️ Stack Técnico - Recordatorio
 
 ### Frontend
+
 - **Framework:** Next.js 14+ (App Router)
 - **Estilos:** Tailwind CSS
 - **Markdown:** react-markdown + gray-matter
@@ -347,6 +383,7 @@
 - **Forms:** React Hook Form (opcional)
 
 ### Backend
+
 - **BaaS:** Firebase
   - Auth (Google, Email/Password)
   - Firestore (NoSQL)
@@ -354,10 +391,12 @@
   - Storage (opcional para assets)
 
 ### APIs Externas
+
 - **IA:** Gemini API / OpenAI API
 - **Email:** Resend
 
 ### Deploy
+
 - **Frontend:** Vercel
 - **Backend:** Firebase Hosting (funciones)
 
@@ -366,16 +405,19 @@
 ## 📝 Notas Importantes
 
 ### Consideraciones de Tiempo
+
 - **Semana de Navidad (23-29 Dic):** Productividad reducida ~50%
 - **Año Nuevo (30 Dic - 1 Ene):** Productividad reducida ~50%
 - **Buffer de 6 días** antes del deadline para imprevistos
 
 ### Dependencias Críticas
+
 1. Obtener API keys (Gemini/OpenAI, Resend) - **Semana 1**
 2. Configurar proyecto Firebase - **Semana 1**
 3. Configurar cuenta Vercel - **Semana 1**
 
 ### Riesgos Identificados
+
 1. **Compatibilidad Fullscreen API:** Safari tiene limitaciones
 2. **Latencia IA:** Puede tomar > 30s en docs grandes
 3. **Costos API:** Monitorear uso de tokens de IA

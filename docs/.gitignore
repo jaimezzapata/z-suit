@@ -1,0 +1,7 @@
+# Archivos de documentación generados automáticamente
+# Descomenta la siguiente línea si NO quieres que se suban a Git
+# *.md
+
+# Si quieres mantener la estructura pero no el contenido:
+# *
+# !.gitkeep

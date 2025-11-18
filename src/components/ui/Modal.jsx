@@ -11,7 +11,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
-    '2xl': 'max-w-2xl',
+    '2xl': 'max-w-[80vw]',
   };
 
   return (
@@ -23,9 +23,9 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
       />
       
       {/* Modal */}
-      <div className={`relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg ${sizes[size]} w-full max-h-[90vh] overflow-hidden shadow-2xl`}>
+      <div className={`relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg ${sizes[size]} w-full h-[85vh] flex flex-col overflow-hidden shadow-2xl`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-[var(--border-color)]">
+        <div className="flex items-center justify-between p-6 border-b border-[var(--border-color)] flex-shrink-0">
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
             {title}
           </h2>
@@ -38,8 +38,51 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
         </div>
         
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <div className="flex-1 overflow-hidden p-6">
           {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function SplitModal({ isOpen, onClose, title, leftContent, rightContent }) {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      />
+      
+      {/* Modal */}
+      <div className="relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg max-w-[90vw] w-full max-h-[85vh] flex flex-col overflow-hidden shadow-2xl">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-[var(--border-color)] flex-shrink-0">
+          <h2 className="text-2xl font-bold text-[var(--text-primary)]">
+            {title}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        
+        {/* Split Content */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Left Side - Fixed Form */}
+          <div className="w-1/3 p-6 border-r border-[var(--border-color)] flex-shrink-0 overflow-y-auto">
+            {leftContent}
+          </div>
+          
+          {/* Right Side - Scrollable Content */}
+          <div className="flex-1 p-6 overflow-y-auto">
+            {rightContent}
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Plus, BookOpen, Edit, Trash2, Copy, Link2, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
@@ -10,6 +11,7 @@ import { createCourse, getCoursesByProfesor, deleteCourse, updateCourse } from '
 
 export default function CoursesPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -214,6 +216,7 @@ export default function CoursesPage() {
                     variant="secondary" 
                     size="sm" 
                     className="flex-1 flex items-center justify-center gap-2"
+                    onClick={() => router.push(`/dashboard/courses/${course.id}`)}
                   >
                     <Edit className="w-4 h-4" />
                     Gestionar
@@ -245,52 +248,102 @@ export default function CoursesPage() {
           setFormData({ name: '', nivel: '1', description: '' });
         }}
         title="Nuevo Curso"
+        size="2xl"
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
-              Nombre del Curso *
-            </label>
-            <input
-              type="text"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
-              placeholder="ej. React Avanzado"
-            />
+        <form onSubmit={handleSubmit} className="h-full flex flex-col">
+          <div className="flex-1 grid grid-cols-2 gap-6 overflow-hidden">
+            {/* Columna Izquierda - Formulario */}
+            <div className="space-y-4 overflow-y-auto pr-3">
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                  Nombre del Curso *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
+                  placeholder="ej. React Avanzado"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                  Nivel (Semestre) *
+                </label>
+                <select
+                  required
+                  value={formData.nivel}
+                  onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
+                  className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
+                >
+                  <option value="1">Primer Semestre</option>
+                  <option value="2">Segundo Semestre</option>
+                  <option value="3">Tercer Semestre</option>
+                  <option value="4">Cuarto Semestre</option>
+                  <option value="5">Quinto Semestre</option>
+                  <option value="6">Sexto Semestre</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                  Descripción
+                </label>
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  rows={4}
+                  className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 resize-none transition-all"
+                  placeholder="Describe brevemente los objetivos del curso..."
+                />
+              </div>
+            </div>
+
+            {/* Columna Derecha - Preview */}
+            <div className="bg-[var(--bg-darkest)] rounded-lg p-4 overflow-y-auto border border-[var(--border-color)]">
+              <h3 className="text-sm font-semibold text-[var(--text-primary)] mb-3 flex items-center gap-2">
+                <Eye className="w-4 h-4 text-[var(--accent-primary)]" />
+                Vista Previa
+              </h3>
+              
+              {/* Preview Card */}
+              <div className="bg-[var(--bg-dark)] rounded-lg p-4 border border-[var(--border-color)]">
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-[var(--text-primary)] mb-1">
+                      {formData.name || 'Nombre del Curso'}
+                    </h4>
+                    <span className="inline-block text-xs text-[var(--accent-primary)] font-medium px-2 py-1 bg-[var(--accent-primary)]/10 rounded-full">
+                      {formData.nivel}° Semestre
+                    </span>
+                  </div>
+                  <BookOpen className="w-6 h-6 text-[var(--accent-primary)] opacity-50" />
+                </div>
+                
+                {formData.description && (
+                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed mt-3 pt-3 border-t border-[var(--border-color)]">
+                    {formData.description}
+                  </p>
+                )}
+                
+                <div className="mt-3 pt-3 border-t border-[var(--border-color)] space-y-1">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-secondary)]">Sesiones:</span>
+                    <span className="text-[var(--text-primary)] font-medium">18 sesiones</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--text-secondary)]">Código:</span>
+                    <code className="text-[var(--accent-primary)] font-mono text-xs">Auto-generado</code>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
-              Nivel (Semestre) *
-            </label>
-            <select
-              required
-              value={formData.nivel}
-              onChange={(e) => setFormData({ ...formData, nivel: e.target.value })}
-              className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)]"
-            >
-              <option value="1">Primer Semestre</option>
-              <option value="2">Segundo Semestre</option>
-              <option value="3">Tercer Semestre</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
-              Descripción (Opcional)
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={3}
-              className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] resize-none"
-              placeholder="Breve descripción del curso..."
-            />
-          </div>
-
-          <div className="flex gap-3 pt-4">
+          {/* Footer con botones */}
+          <div className="flex gap-3 pt-4 border-t border-[var(--border-color)] mt-4">
             <Button
               type="button"
               variant="ghost"

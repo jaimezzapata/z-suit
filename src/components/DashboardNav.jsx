@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Home, BookOpen, Brain, Github, LogOut } from 'lucide-react';
+import { Home, BookOpen, Brain, Github, LogOut, Shield } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { ThemeSelector } from '@/components/ThemeSelector';
 
@@ -22,6 +22,11 @@ export function DashboardNav() {
     { icon: Brain, label: 'Exámenes', path: '/dashboard/exams' },
     { icon: Github, label: 'GitHub', path: '/dashboard/github' },
   ];
+
+  // Añadir Admin solo para superadmins
+  if (user?.role === 'superadmin') {
+    navItems.push({ icon: Shield, label: 'Admin', path: '/dashboard/admin' });
+  }
 
   const isActive = (path) => pathname === path;
 
