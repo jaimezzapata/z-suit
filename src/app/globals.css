@@ -1,26 +1,110 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Color base dinámico (se actualiza desde el selector de tema) */
+  --theme-hue: 135; /* Verde por defecto */
+  --theme-saturation: 100%;
+  --theme-lightness: 50%;
+  
+  /* Intensidad de color */
+  --intensity-saturation: 100%; /* Neón por defecto */
+  --intensity-lightness: 50%;
+  
+  /* Modo de color: monocromatico, complementario, analogico, triadico */
+  --theme-mode: 'monocromatico';
+  
+  /* Colores secundarios para esquemas multi-color */
+  --theme-hue-secondary: 135;
+  --theme-hue-tertiary: 135;
+  
+  /* Fondos oscuros monocromáticos */
+  --bg-darkest: hsl(var(--theme-hue), 15%, 5%);
+  --bg-dark: hsl(var(--theme-hue), 12%, 8%);
+  --bg-medium: hsl(var(--theme-hue-secondary), 10%, 12%);
+  --bg-light: hsl(var(--theme-hue), 8%, 16%);
+  
+  /* Acentos con saturación e intensidad ajustable */
+  --accent-primary: hsl(var(--theme-hue), var(--intensity-saturation), var(--intensity-lightness));
+  --accent-secondary: hsl(var(--theme-hue-secondary), calc(var(--intensity-saturation) * 0.8), calc(var(--intensity-lightness) * 0.9));
+  --accent-tertiary: hsl(var(--theme-hue-tertiary), calc(var(--intensity-saturation) * 0.7), var(--intensity-lightness));
+  --accent-muted: hsl(var(--theme-hue), calc(var(--intensity-saturation) * 0.4), 35%);
+  --accent-hover: hsl(var(--theme-hue), var(--intensity-saturation), calc(var(--intensity-lightness) + 10%));
+  
+  /* Texto con contraste WCAG AAA */
+  --text-primary: hsl(var(--theme-hue), 5%, 95%);
+  --text-secondary: hsl(var(--theme-hue-secondary), 8%, 70%);
+  --text-tertiary: hsl(var(--theme-hue), 10%, 50%);
+  --text-disabled: hsl(var(--theme-hue), 10%, 30%);
+  
+  /* Borders y dividers */
+  --border-color: hsl(var(--theme-hue-secondary), 20%, 20%);
+  --border-light: hsl(var(--theme-hue), 15%, 15%);
+  
+  /* Estados - usan el tema seleccionado */
+  --success: hsl(135, var(--intensity-saturation), var(--intensity-lightness));
+  --error: hsl(0, var(--intensity-saturation), var(--intensity-lightness));
+  --warning: hsl(45, var(--intensity-saturation), var(--intensity-lightness));
+  --info: hsl(var(--theme-hue), var(--intensity-saturation), var(--intensity-lightness));
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* Colores personalizados Z-SUIT */
+  --color-bg-darkest: var(--bg-darkest);
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-medium: var(--bg-medium);
+  --color-bg-light: var(--bg-light);
+  
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-accent-muted: var(--accent-muted);
+  --color-accent-hover: var(--accent-hover);
+  
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-disabled: var(--text-disabled);
+  
+  --color-border: var(--border-color);
+  --color-border-light: var(--border-light);
+  
+  --color-success: var(--success);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  
+  /* Fuentes */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--bg-darkest);
+  color: var(--text-primary);
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-secondary);
+}
+
+/* Animaciones suaves para transiciones de tema */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+
