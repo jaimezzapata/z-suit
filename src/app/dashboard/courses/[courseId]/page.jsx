@@ -362,6 +362,7 @@ export default function CourseSessionsPage() {
           }}
           title={`Sesión ${editingSession + 1}`}
           size="2xl"
+          fullHeight={true}
         >
           <div className="h-full grid grid-cols-2 gap-6">
             {/* Columna Izquierda - Formulario (Fixed, sin scroll) */}

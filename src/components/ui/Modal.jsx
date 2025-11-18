@@ -3,7 +3,7 @@
 import { X } from 'lucide-react';
 import { Button } from './Button';
 
-export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
+export function Modal({ isOpen, onClose, title, children, size = 'md', fullHeight = false }) {
   if (!isOpen) return null;
 
   const sizes = {
@@ -23,7 +23,9 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
       />
       
       {/* Modal */}
-      <div className={`relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg ${sizes[size]} w-full h-[85vh] flex flex-col overflow-hidden shadow-2xl`}>
+      <div className={`relative bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg ${sizes[size]} w-full ${
+        fullHeight ? 'h-[85vh]' : 'max-h-[85vh]'
+      } flex flex-col overflow-hidden shadow-2xl`}>
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[var(--border-color)] flex-shrink-0">
           <h2 className="text-2xl font-bold text-[var(--text-primary)]">
@@ -38,7 +40,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }) {
         </div>
         
         {/* Content */}
-        <div className="flex-1 overflow-hidden p-6">
+        <div className={`${fullHeight ? 'flex-1 overflow-hidden' : 'overflow-y-auto'} p-6`}>
           {children}
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Plus, BookOpen, Edit, Trash2, Copy, Link2, Eye, EyeOff } from 'lucide-react';
+import { Plus, BookOpen, Edit, Trash2, Copy, Link2, Eye, EyeOff, Users, FileText, GraduationCap } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button, Card, Modal, ConfirmDialog } from '@/components/ui';
 import { DashboardNav } from '@/components/DashboardNav';
@@ -21,6 +21,7 @@ export default function CoursesPage() {
     name: '',
     nivel: '1',
     description: '',
+    tipo: 'regular', // 'regular' (18 sesiones) o 'empresarial' (7 sesiones)
   });
   const [submitting, setSubmitting] = useState(false);
 
@@ -65,11 +66,11 @@ export default function CoursesPage() {
 
     const result = await createCourse(user.uid, formData);
     
-    if (result.success) {
+      if (result.success) {
       toast.success('Curso creado exitosamente');
       await loadCourses();
       setShowModal(false);
-      setFormData({ name: '', nivel: '1', description: '' });
+      setFormData({ name: '', nivel: '1', description: '', tipo: 'regular' });
     } else {
       toast.error('Error al crear el curso: ' + result.error);
     }
@@ -152,90 +153,132 @@ export default function CoursesPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {courses.map((course) => (
-              <Card 
-                key={course.id}
-                variant="primary"
-                className="hover:scale-105 transition-transform"
-              >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h3 className="text-xl font-bold text-[var(--text-primary)] mb-1">
-                      {course.name}
-                    </h3>
-                    <span className="text-sm text-[var(--accent-primary)] font-medium">
-                      {course.nivel}° Semestre
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => togglePublic(course.id, course.isPublic)}
-                    className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)]"
-                    title={course.isPublic ? 'Público' : 'Privado (requiere código)'}
-                  >
-                    {course.isPublic ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-                  </button>
-                </div>
-                
-                {course.description && (
-                  <p className="text-[var(--text-secondary)] text-sm mb-3">
-                    {course.description}
-                  </p>
-                )}
-                
-                {/* Código de acceso y link */}
-                <div className="bg-[var(--bg-darkest)] rounded-lg p-3 mb-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-[var(--text-secondary)]">Código:</span>
-                    <div className="flex items-center gap-2">
-                      <code className="text-sm font-mono text-[var(--accent-primary)]">
-                        {course.accessCode}
-                      </code>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+            {courses.map((course) => {
+              const sessionsCompleted = course.sessions?.filter(s => s.documentation).length || 0;
+              const totalSessions = 18;
+              const progressPercent = (sessionsCompleted / totalSessions) * 100;
+              
+              return (
+                <div 
+                  key={course.id}
+                  className="bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg hover:border-[var(--accent-primary)] transition-all duration-200 overflow-hidden"
+                >
+                  <div className="flex items-stretch">
+                    {/* Icono/Imagen Izquierda */}
+                    <div className="w-32 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center flex-shrink-0">
+                      <GraduationCap className="w-16 h-16 text-white opacity-90" />
+                    </div>
+
+                    {/* Contenido Central */}
+                    <div className="flex-1 p-5">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-2xl font-bold text-[var(--text-primary)]">
+                              {course.name}
+                            </h3>
+                            <span className="px-3 py-1 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-semibold rounded-full">
+                              Nivel {course.nivel}
+                            </span>
+                            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                              course.isPublic 
+                                ? 'bg-green-500/20 text-green-400' 
+                                : 'bg-orange-500/20 text-orange-400'
+                            }`}>
+                              {course.isPublic ? 'Público' : 'Privado'}
+                            </span>
+                          </div>
+                          
+                          {course.description && (
+                            <p className="text-[var(--text-secondary)] text-sm mb-3 line-clamp-2">
+                              {course.description}
+                            </p>
+                          )}
+
+                          {/* Estadísticas */}
+                          <div className="flex items-center gap-6 text-sm">
+                            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                              <FileText className="w-4 h-4" />
+                              <span>{sessionsCompleted}/{totalSessions} sesiones</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-[var(--text-secondary)]">
+                              <BookOpen className="w-4 h-4" />
+                              <code className="text-xs font-mono text-[var(--accent-primary)] bg-[var(--bg-darkest)] px-2 py-1 rounded">
+                                {course.accessCode}
+                              </code>
+                            </div>
+                          </div>
+
+                          {/* Barra de progreso */}
+                          <div className="mt-3">
+                            <div className="h-2 bg-[var(--bg-darkest)] rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)] transition-all duration-300"
+                                style={{ width: `${progressPercent}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Acciones Derecha */}
+                    <div className="w-48 bg-[var(--bg-medium)] border-l border-[var(--border-color)] p-4 flex flex-col gap-2">
+                      <Button 
+                        variant="secondary" 
+                        size="sm" 
+                        className="w-full flex items-center justify-center gap-2"
+                        onClick={() => router.push(`/dashboard/courses/${course.id}`)}
+                      >
+                        <Edit className="w-4 h-4" />
+                        Gestionar
+                      </Button>
+                      
+                      <button
+                        onClick={() => togglePublic(course.id, course.isPublic)}
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-colors flex items-center justify-center gap-2"
+                      >
+                        {course.isPublic ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                        {course.isPublic ? 'Hacer Privado' : 'Hacer Público'}
+                      </button>
+
+                      <button
+                        onClick={() => copyToClipboard(getPublicUrl(course), 'Link')}
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Link2 className="w-4 h-4" />
+                        Copiar Link
+                      </button>
+
                       <button
                         onClick={() => copyToClipboard(course.accessCode, 'Código')}
-                        className="text-[var(--text-secondary)] hover:text-[var(--accent-primary)]"
+                        className="w-full px-3 py-2 text-sm rounded-lg border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--accent-primary)] hover:border-[var(--accent-primary)] transition-colors flex items-center justify-center gap-2"
                       >
                         <Copy className="w-4 h-4" />
+                        Copiar Código
                       </button>
+
+                      <div className="flex-1"></div>
+
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCourseToDelete(course.id);
+                          setShowDeleteDialog(true);
+                        }}
+                        className="w-full text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                      >
+                        <Trash2 className="w-4 h-4 mr-2" />
+                        Eliminar
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-[var(--text-secondary)]">Link:</span>
-                    <button
-                      onClick={() => copyToClipboard(getPublicUrl(course), 'Link')}
-                      className="flex items-center gap-1 text-xs text-[var(--accent-primary)] hover:underline"
-                    >
-                      <Link2 className="w-3 h-3" />
-                      Copiar URL
-                    </button>
-                  </div>
                 </div>
-
-                <div className="flex gap-2">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    className="flex-1 flex items-center justify-center gap-2"
-                    onClick={() => router.push(`/dashboard/courses/${course.id}`)}
-                  >
-                    <Edit className="w-4 h-4" />
-                    Gestionar
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setCourseToDelete(course.id);
-                      setShowDeleteDialog(true);
-                    }}
-                    className="text-red-500 hover:text-red-400"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </div>
-              </Card>
-            ))}
+              );
+            })}
           </div>
         )}
       </main>
@@ -245,10 +288,11 @@ export default function CoursesPage() {
         isOpen={showModal}
         onClose={() => {
           setShowModal(false);
-          setFormData({ name: '', nivel: '1', description: '' });
+          setFormData({ name: '', nivel: '1', description: '', tipo: 'regular' });
         }}
         title="Nuevo Curso"
         size="2xl"
+        fullHeight={true}
       >
         <form onSubmit={handleSubmit} className="h-full flex flex-col">
           <div className="flex-1 grid grid-cols-2 gap-6 overflow-hidden">
@@ -266,6 +310,21 @@ export default function CoursesPage() {
                   className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
                   placeholder="ej. React Avanzado"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-2">
+                  Tipo de Curso *
+                </label>
+                <select
+                  required
+                  value={formData.tipo}
+                  onChange={(e) => setFormData({ ...formData, tipo: e.target.value })}
+                  className="w-full bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-primary)]/20 transition-all"
+                >
+                  <option value="regular">Regular (18 sesiones)</option>
+                  <option value="empresarial">Empresarial (7 sesiones)</option>
+                </select>
               </div>
 
               <div>
@@ -308,36 +367,70 @@ export default function CoursesPage() {
                 Vista Previa
               </h3>
               
-              {/* Preview Card */}
-              <div className="bg-[var(--bg-dark)] rounded-lg p-4 border border-[var(--border-color)]">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-[var(--text-primary)] mb-1">
-                      {formData.name || 'Nombre del Curso'}
-                    </h4>
-                    <span className="inline-block text-xs text-[var(--accent-primary)] font-medium px-2 py-1 bg-[var(--accent-primary)]/10 rounded-full">
-                      {formData.nivel}° Semestre
-                    </span>
+              {/* Preview Card - Mismo diseño que el listado */}
+              <div className="bg-[var(--bg-dark)] border border-[var(--border-color)] rounded-lg overflow-hidden">
+                <div className="flex items-stretch">
+                  {/* Icono Izquierda */}
+                  <div className="w-20 bg-gradient-to-br from-[var(--accent-primary)] to-[var(--accent-secondary)] flex items-center justify-center flex-shrink-0">
+                    <GraduationCap className="w-10 h-10 text-white opacity-90" />
                   </div>
-                  <BookOpen className="w-6 h-6 text-[var(--accent-primary)] opacity-50" />
+
+                  {/* Contenido */}
+                  <div className="flex-1 p-3">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h4 className="text-base font-bold text-[var(--text-primary)]">
+                        {formData.name || 'Nombre del Curso'}
+                      </h4>
+                      <span className="px-2 py-0.5 bg-[var(--accent-primary)]/20 text-[var(--accent-primary)] text-xs font-semibold rounded-full">
+                        Nivel {formData.nivel}
+                      </span>
+                      <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+                        formData.tipo === 'empresarial' 
+                          ? 'bg-purple-500/20 text-purple-400' 
+                          : 'bg-blue-500/20 text-blue-400'
+                      }`}>
+                        {formData.tipo === 'empresarial' ? 'Empresarial' : 'Regular'}
+                      </span>
+                      <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-semibold rounded-full">
+                        Público
+                      </span>
+                    </div>
+                    
+                    {formData.description && (
+                      <p className="text-[var(--text-secondary)] text-xs mb-2 line-clamp-2">
+                        {formData.description}
+                      </p>
+                    )}
+
+                    {/* Estadísticas */}
+                    <div className="flex items-center gap-4 text-xs">
+                      <div className="flex items-center gap-1 text-[var(--text-secondary)]">
+                        <FileText className="w-3 h-3" />
+                        <span>0/{formData.tipo === 'empresarial' ? '7' : '18'} sesiones</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-[var(--text-secondary)]">
+                        <BookOpen className="w-3 h-3" />
+                        <code className="text-xs font-mono text-[var(--accent-primary)] bg-[var(--bg-darkest)] px-1.5 py-0.5 rounded">
+                          AUTO
+                        </code>
+                      </div>
+                    </div>
+
+                    {/* Barra de progreso */}
+                    <div className="mt-2">
+                      <div className="h-1.5 bg-[var(--bg-darkest)] rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-[var(--accent-primary)] to-[var(--accent-secondary)]"
+                          style={{ width: '0%' }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                
-                {formData.description && (
-                  <p className="text-[var(--text-secondary)] text-xs leading-relaxed mt-3 pt-3 border-t border-[var(--border-color)]">
-                    {formData.description}
-                  </p>
-                )}
-                
-                <div className="mt-3 pt-3 border-t border-[var(--border-color)] space-y-1">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-[var(--text-secondary)]">Sesiones:</span>
-                    <span className="text-[var(--text-primary)] font-medium">18 sesiones</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-[var(--text-secondary)]">Código:</span>
-                    <code className="text-[var(--accent-primary)] font-mono text-xs">Auto-generado</code>
-                  </div>
-                </div>
+              </div>
+
+              <div className="mt-3 p-2 bg-[var(--bg-medium)] rounded text-xs text-[var(--text-secondary)]">
+                💡 Se generará automáticamente un código de acceso único al crear el curso
               </div>
             </div>
           </div>

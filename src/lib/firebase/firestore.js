@@ -29,8 +29,11 @@ const generateAccessCode = () => {
 
 export const createCourse = async (profesorId, courseData) => {
   try {
-    // Inicializar 18 sesiones vacías
-    const sessions = Array.from({ length: 18 }, (_, i) => ({
+    // Determinar número de sesiones según tipo
+    const numSessions = courseData.tipo === 'empresarial' ? 7 : 18;
+    
+    // Inicializar sesiones vacías
+    const sessions = Array.from({ length: numSessions }, (_, i) => ({
       number: i + 1,
       title: '',
       description: '',
@@ -42,7 +45,8 @@ export const createCourse = async (profesorId, courseData) => {
       name: courseData.name,
       nivel: courseData.nivel, // "1", "2", o "3"
       description: courseData.description || '',
-      sessions, // Array de 18 sesiones
+      tipo: courseData.tipo || 'regular', // 'regular' o 'empresarial'
+      sessions, // Array de sesiones (18 o 7 según tipo)
       accessCode: generateAccessCode(), // Código único para acceso
       isPublic: courseData.isPublic !== undefined ? courseData.isPublic : true, // Por defecto público
       slug: courseData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
