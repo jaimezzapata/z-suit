@@ -119,7 +119,7 @@ export default function TakeExamPage() {
 
     // Detectar cambio de ventana/tab
     const handleVisibilityChange = () => {
-      if (document.hidden && !isProcessingVisibilityRef.current) {
+      if (document.hidden && !isProcessingVisibilityRef.current && !submittingRef.current) {
         isProcessingVisibilityRef.current = true;
         
         setTimeout(() => {
@@ -134,14 +134,19 @@ export default function TakeExamPage() {
             console.log('3 warnings reached, triggering auto-submit');
             // Bloquear interfaz inmediatamente
             setAutoSubmitting(true);
-            // Limpiar listeners inmediatamente
+            // Limpiar listeners inmediatamente para evitar más detecciones
             document.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('copy', preventCopyPaste);
+            document.removeEventListener('paste', preventCopyPaste);
+            document.removeEventListener('cut', preventCopyPaste);
             // Auto-enviar por violaciones
             setTimeout(() => handleAutoSubmit('visibility_violations'), 100);
+            // Retornar 3 para que no incremente más
+            return 3;
           } else {
             setShowVisibilityModal(true);
+            return newCount;
           }
-          return newCount;
         });
       }
     };
@@ -189,11 +194,10 @@ export default function TakeExamPage() {
         }
         
         // Crear intento de examen
-        const attemptResult = await createExamAttempt(params.examId, studentEmail);
+        const attemptResult = await createExamAttempt(params.examId, studentEmail, studentName);
         if (attemptResult.success) {
           setAttemptId(attemptResult.id);
-          // Guardar nombre del estudiante
-          await updateExamAttempt(attemptResult.id, { studentName });
+          console.log('Exam attempt created:', attemptResult.id);
         }
       }
     } catch (error) {
