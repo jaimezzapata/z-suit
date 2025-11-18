@@ -1,27 +1,52 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { BookOpen, Brain, Github, Rocket } from 'lucide-react';
 import { Button, Card } from '@/components/ui';
 import { DashboardNav } from '@/components/DashboardNav';
+import { getCoursesByProfesor } from '@/lib/firebase/firestore';
 
 export default function DashboardPage() {
   const { user, logout } = useAuth();
   const router = useRouter();
+  const [stats, setStats] = useState({
+    courses: 0,
+    exams: 0,
+    docs: 0,
+    assignments: 0
+  });
+  const [loading, setLoading] = useState(true);
 
-  // Debug: Ver datos del usuario
+  // Cargar estadísticas
   useEffect(() => {
-    if (user) {
-      console.log('Usuario en dashboard:', {
-        displayName: user.displayName,
-        email: user.email,
-        photoURL: user.photoURL,
-        uid: user.uid
-      });
+    if (user?.uid) {
+      loadStats();
     }
   }, [user]);
+
+  const loadStats = async () => {
+    setLoading(true);
+    
+    // Cargar cursos
+    const coursesResult = await getCoursesByProfesor(user.uid);
+    if (coursesResult.success) {
+      const courses = coursesResult.data;
+      const totalDocs = courses.reduce((sum, course) => {
+        return sum + (course.sessions?.filter(s => s.documentation).length || 0);
+      }, 0);
+      
+      setStats({
+        courses: courses.length,
+        exams: 0, // Por implementar
+        docs: totalDocs,
+        assignments: 0 // Por implementar
+      });
+    }
+    
+    setLoading(false);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -97,19 +122,27 @@ export default function DashboardPage() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg p-4">
             <p className="text-[var(--text-secondary)] text-sm mb-1">Cursos Activos</p>
-            <p className="text-3xl font-bold text-[var(--accent-primary)]">0</p>
+            <p className="text-3xl font-bold text-[var(--accent-primary)]">
+              {loading ? '...' : stats.courses}
+            </p>
           </div>
           <div className="bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg p-4">
             <p className="text-[var(--text-secondary)] text-sm mb-1">Exámenes Creados</p>
-            <p className="text-3xl font-bold text-[var(--accent-primary)]">0</p>
+            <p className="text-3xl font-bold text-[var(--accent-primary)]">
+              {loading ? '...' : stats.exams}
+            </p>
           </div>
           <div className="bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg p-4">
-            <p className="text-[var(--text-secondary)] text-sm mb-1">Docs Publicadas</p>
-            <p className="text-3xl font-bold text-[var(--accent-primary)]">0</p>
+            <p className="text-[var(--text-secondary)] text-sm mb-1">Sesiones Documentadas</p>
+            <p className="text-3xl font-bold text-[var(--accent-primary)]">
+              {loading ? '...' : stats.docs}
+            </p>
           </div>
           <div className="bg-[var(--bg-medium)] border border-[var(--border-color)] rounded-lg p-4">
             <p className="text-[var(--text-secondary)] text-sm mb-1">Entregas Pendientes</p>
-            <p className="text-3xl font-bold text-[var(--accent-primary)]">0</p>
+            <p className="text-3xl font-bold text-[var(--accent-primary)]">
+              {loading ? '...' : stats.assignments}
+            </p>
           </div>
         </div>
 

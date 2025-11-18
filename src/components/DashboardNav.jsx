@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Home, BookOpen, Brain, Github, LogOut, Shield } from 'lucide-react';
@@ -10,6 +11,33 @@ export function DashboardNav() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [displayText, setDisplayText] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
+  const fullText = '> Z-SUIT_';
+
+  // Efecto de escritura tipo terminal
+  useEffect(() => {
+    let currentIndex = 0;
+    const typingInterval = setInterval(() => {
+      if (currentIndex <= fullText.length) {
+        setDisplayText(fullText.slice(0, currentIndex));
+        currentIndex++;
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, 100);
+
+    return () => clearInterval(typingInterval);
+  }, []);
+
+  // Cursor parpadeante
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 530);
+
+    return () => clearInterval(cursorInterval);
+  }, []);
 
   const handleLogout = async () => {
     await logout();
@@ -37,10 +65,11 @@ export function DashboardNav() {
           {/* Logo + Navigation */}
           <div className="flex items-center gap-8">
             <h1 
-              className="text-2xl font-bold font-mono text-[var(--accent-primary)] cursor-pointer"
+              className="text-2xl font-bold font-mono text-[var(--accent-primary)] cursor-pointer select-none"
               onClick={() => router.push('/dashboard')}
             >
-              &gt; Z-SUIT_
+              {displayText}
+              <span className={`inline-block w-2 h-5 bg-[var(--accent-primary)] ml-1 ${showCursor ? 'opacity-100' : 'opacity-0'}`} style={{transition: 'opacity 0.1s'}}></span>
             </h1>
             
             {/* Nav Links */}
