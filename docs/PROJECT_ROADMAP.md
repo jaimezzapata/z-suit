@@ -1,9 +1,10 @@
 # Z-SUIT - Cronograma y Tareas del Proyecto
 
-**Versión:** 1.0  
+**Versión:** 1.1  
 **Fecha de Inicio:** 17 de noviembre de 2025  
+**Fecha Actual:** 18 de noviembre de 2025  
 **Deadline MVP:** 26 de enero de 2026  
-**Tiempo disponible:** 10 semanas (70 días)
+**Tiempo disponible:** 10 semanas (69 días restantes)
 
 ---
 
@@ -11,9 +12,9 @@
 
 ### **✅ Fase 1: Configuración y Fundamentos (Semana 1-2)** - COMPLETADA
 
-_18 Nov - 1 Dic 2025_
+_17 Nov - 1 Dic 2025_
 
-#### Semana 1 (18-24 Nov) - ✅ COMPLETADA
+#### Semana 1 (17-24 Nov) - ✅ COMPLETADA (100%)
 
 - [x] Configurar Firebase en el proyecto Next.js
 - [x] Implementar Firebase Auth (Google + Email/Password)
@@ -21,39 +22,67 @@ _18 Nov - 1 Dic 2025_
 - [x] Configurar variables de entorno (.env.local)
 - [x] Crear sistema de diseño base (Tailwind config con colores Z-SUIT)
 - [x] Implementar layout principal con Dark Mode (`#0D1117`)
-- [x] Sistema de temas dinámicos (4 esquemas × 5 intensidades)
-
-#### Semana 2 (25 Nov - 1 Dic) - ✅ COMPLETADA
-
+- [x] Sistema de temas dinámicos (4 esquemas × 5 intensidades con persistencia)
 - [x] Crear página de login para profesores
 - [x] Implementar protección de rutas (middleware)
 - [x] Crear dashboard principal del profesor
 - [x] Crear contexto de autenticación global
 - [x] Foto de perfil de Google en dashboard
 - [x] Reemplazo de emojis por iconos (Lucide React)
-- [ ] Implementar CRUD básico de Cursos (UI + Firestore) - **SIGUIENTE**
+
+#### Semana 2 (25 Nov - 1 Dic) - 🚧 EN PROGRESO (70%)
+
+- [x] Implementar CRUD completo de Cursos
+  - [x] Crear curso con tipo (Regular: 18 sesiones / Empresarial: 7 sesiones)
+  - [x] Listar cursos con diseño horizontal expandido
+  - [x] Editar/Eliminar cursos
+  - [x] Sistema de códigos de acceso únicos
+  - [x] Gestión de visibilidad (Público/Privado)
+  - [x] Slugs automáticos para URLs amigables
+- [x] Diseño de tarjetas de curso con estadísticas visuales
+- [x] Panel de administración superadmin
+  - [x] Eliminación masiva de cursos/usuarios/exámenes
+  - [x] Protección de cuentas superadmin
+- [ ] Editor de Sesiones con IA
+  - [x] Vista de gestión de curso por sesiones
+  - [x] Formulario de edición por sesión
+  - [x] Integración con Gemini API (gemini-2.0-flash-lite)
+  - [x] Generación de documentación IA
+  - [x] Preview y edición de Markdown (react-markdown + remark-gfm)
+  - [x] Sistema de sincronización con carpeta /docs
+  - [x] Import/Export de archivos .md
+  - [x] Gestión de archivos locales (Load/Save)
+  - [ ] Optimizaciones finales del editor
 
 ---
 
-### **Fase 2: Módulo de Documentación (Semana 3-4)**
+### **Fase 2: Módulo de Documentación (Semana 3-4)** - 🚧 INICIADA
 
 _2 Dic - 15 Dic 2025_
 
 #### Semana 3 (2-8 Dic)
 
-- [ ] Crear editor de Markdown con frontmatter
-- [ ] Integrar `react-markdown` y `gray-matter`
-- [ ] Implementar preview en tiempo real del Markdown
-- [ ] Diseñar sistema de estilos para docs renderizadas
-- [ ] CRUD completo de documentación en Firestore
-- [ ] Asociar documentación a cursos (`courseId`)
+- [x] Integrar `react-markdown` con remark-gfm
+- [x] Implementar preview en tiempo real del Markdown
+- [x] Diseñar sistema de estilos para docs (@tailwindcss/typography)
+- [x] CRUD de documentación en Firestore (dentro de sessions)
+- [x] Asociar documentación a sesiones de cursos
+- [ ] Vista pública de documentación (en progreso)
+  - [x] Ruta `/curso-publico/[slug]` creada
+  - [ ] Navegación entre sesiones
+  - [ ] Diseño final para estudiantes
+- [ ] Editor de Markdown mejorado
+  - [ ] Toolbar con formato
+  - [ ] Atajos de teclado
+  - [ ] Inserción de imágenes
 
 #### Semana 4 (9-15 Dic)
 
-- [ ] Crear vista pública de documentación para estudiantes
+- [ ] Completar vista pública de documentación
 - [ ] Implementar navegación entre documentos del curso
 - [ ] Añadir búsqueda dentro de la documentación
-- [ ] Optimizar renderizado de MD (syntax highlighting)
+- [ ] Optimizar renderizado de MD (syntax highlighting con rehype-highlight)
+- [ ] Sistema de índice/tabla de contenidos
 - [ ] Testing del módulo de documentación
 - [ ] Ajustes de UX/UI basados en pruebas
 
@@ -66,16 +95,16 @@ _16 Dic 2025 - 5 Ene 2026_
 #### Semana 5 (16-22 Dic)
 
 - [ ] Configurar Firebase Functions
-- [ ] Integrar Gemini API o OpenAI API
-- [ ] Crear función serverless para generar preguntas
+- [ ] Crear función serverless para generar preguntas desde docs
 - [ ] Implementar parseo de documentación para contexto IA
 - [ ] Crear interfaz de revisión de preguntas sugeridas
 - [ ] Implementar sistema de aprobación/edición/descarte
+- [ ] Guardar banco de preguntas en Firestore
 
 #### Semana 6 (23-29 Dic) 🎄 _Semana Festiva - Trabajo Reducido_
 
 - [ ] Crear configurador de exámenes (UI)
-- [ ] Implementar generación de `accessCode` único
+- [ ] Implementar generación de `accessCode` único para exámenes
 - [ ] Guardar configuración en Firestore (`exams/`)
 - [ ] Crear página de acceso para estudiantes (código + email)
 - [ ] Implementar timer del examen
@@ -117,12 +146,12 @@ _13 Ene - 19 Ene 2026_
 
 - [ ] Integrar todos los módulos en el dashboard principal
 - [ ] Crear sistema de navegación entre módulos
-- [ ] Implementar notificaciones/feedback visual
+- [ ] Implementar notificaciones/feedback visual mejoradas
 - [ ] Añadir estados de carga y manejo de errores
 - [ ] Optimizar queries de Firestore (indices)
 - [ ] Implementar analytics básico (opcional)
 - [ ] Testing de integración completo
-- [ ] Ajustes de rendimiento
+- [ ] Ajustes de rendimiento y optimización de bundle
 
 ---
 
@@ -147,72 +176,88 @@ _20 Ene - 26 Ene 2026_
 
 ## 🎯 Hitos Críticos
 
-| Fecha      | Hito                            | Descripción                                 |
-| ---------- | ------------------------------- | ------------------------------------------- |
-| **1 Dic**  | Auth + Cursos Funcionando       | Sistema de login y gestión básica de cursos |
-| **15 Dic** | Módulo Docs Completo            | Editor MD + Vista estudiante funcional      |
-| **5 Ene**  | Sistema de Proctoring Operativo | Anti-cheat implementado y probado           |
-| **12 Ene** | GitHub Grader Completo          | Flujo completo de entrega/calificación      |
-| **19 Ene** | Integración Finalizada          | Todos los módulos trabajando juntos         |
-| **26 Ene** | **LANZAMIENTO MVP**             | Producto en producción listo para usar      |
+| Fecha      | Hito                            | Estado | Descripción                                 |
+| ---------- | ------------------------------- | ------ | ------------------------------------------- |
+| **1 Dic**  | Auth + Cursos Funcionando       | ✅ ✓   | Sistema de login y gestión básica de cursos |
+| **15 Dic** | Módulo Docs Completo            | 🚧 70% | Editor MD + Vista estudiante funcional      |
+| **5 Ene**  | Sistema de Proctoring Operativo | ⏳     | Anti-cheat implementado y probado           |
+| **12 Ene** | GitHub Grader Completo          | ⏳     | Flujo completo de entrega/calificación      |
+| **19 Ene** | Integración Finalizada          | ⏳     | Todos los módulos trabajando juntos         |
+| **26 Ene** | **LANZAMIENTO MVP**             | ⏳     | Producto en producción listo para usar      |
 
 ---
 
 ## 📋 Tareas por Módulo (Checklist Detallado)
 
-### **A. Infraestructura Base**
+### **A. Infraestructura Base** - ✅ COMPLETADO (100%)
 
-- [ ] Inicializar Firebase en Next.js
-- [ ] Configurar Firebase Auth (Google + Email/Password)
-- [ ] Crear collections en Firestore
-- [ ] Configurar Firebase Security Rules
-- [ ] Setup de variables de entorno
-- [ ] Configurar Tailwind con tema Z-SUIT
-- [ ] Crear componentes base (Button, Input, Card, etc.)
-- [ ] Implementar layout con navegación
-- [ ] Sistema de protección de rutas
+- [x] Inicializar Firebase en Next.js
+- [x] Configurar Firebase Auth (Google + Email/Password)
+- [x] Crear collections en Firestore
+- [x] Configurar Firebase Security Rules
+- [x] Setup de variables de entorno
+- [x] Configurar Tailwind con tema Z-SUIT
+- [x] Crear componentes base (Button, Input, Card, Modal, etc.)
+- [x] Implementar layout con navegación
+- [x] Sistema de protección de rutas
+- [x] Sistema de temas dinámicos con persistencia
 
-### **B. Módulo de Autenticación**
+### **B. Módulo de Autenticación** - ✅ COMPLETADO (100%)
 
-- [ ] Página de login (`/login`)
-- [ ] Lógica de login con Google
-- [ ] Lógica de login con Email/Password
-- [ ] Contexto de autenticación React
-- [ ] Middleware de Next.js para rutas protegidas
-- [ ] Página de dashboard profesor (`/dashboard`)
-- [ ] Logout functionality
+- [x] Página de login (`/login`)
+- [x] Lógica de login con Google
+- [x] Lógica de login con Email/Password
+- [x] Contexto de autenticación React
+- [x] Middleware de Next.js para rutas protegidas
+- [x] Página de dashboard profesor (`/dashboard`)
+- [x] Logout functionality
+- [x] Foto de perfil de Google
 
-### **C. Módulo de Cursos**
+### **C. Módulo de Cursos** - ✅ COMPLETADO (100%)
 
-- [ ] UI para crear curso
-- [ ] UI para listar cursos
-- [ ] UI para editar curso
-- [ ] UI para eliminar curso
-- [ ] Firestore CRUD operations
-- [ ] Asociar cursos al `profesorId`
-- [ ] Validaciones de formulario
+- [x] UI para crear curso (modal con preview)
+- [x] Tipo de curso: Regular (18 sesiones) / Empresarial (7 sesiones)
+- [x] UI para listar cursos (diseño horizontal con tarjetas)
+- [x] Estadísticas visuales (progreso, sesiones, badges)
+- [x] UI para editar curso
+- [x] UI para eliminar curso (con confirmación)
+- [x] Firestore CRUD operations
+- [x] Asociar cursos al `profesorId`
+- [x] Validaciones de formulario
+- [x] Sistema de códigos de acceso únicos
+- [x] Gestión de visibilidad (Público/Privado)
+- [x] Generación automática de slugs
+- [x] Vista de gestión de sesiones por curso
+- [x] Modal adaptable (fullHeight prop)
 
-### **D. Módulo de Documentación**
+### **D. Módulo de Documentación** - 🚧 EN PROGRESO (70%)
 
-- [ ] Editor de Markdown (`/courses/[id]/docs/new`)
-- [ ] Integrar `gray-matter` para frontmatter
-- [ ] Preview en tiempo real
-- [ ] Guardar en Firestore (`documentation/`)
-- [ ] Lista de documentos por curso
-- [ ] Editar documento existente
-- [ ] Eliminar documento
-- [ ] Vista estudiante (`/courses/[id]/docs/[docId]`)
-- [ ] Renderizado con `react-markdown`
-- [ ] Estilos personalizados para MD
-- [ ] Syntax highlighting (código)
-- [ ] Navegación entre docs
+- [x] Editor de Markdown integrado en sesiones
+- [x] Integrar `react-markdown` + `remark-gfm`
+- [x] Preview en tiempo real (toggle Preview/Edit)
+- [x] Guardar en Firestore (`courses/[id]/sessions[]`)
+- [x] Integración con Gemini API
+- [x] Generación automática de documentación IA
+- [x] Sistema de sincronización con carpeta `/docs`
+  - [x] API `/api/sync-docs` (POST/GET)
+  - [x] Búsqueda flexible por courseId/code/slug
+  - [x] Parseo de frontmatter YAML
+- [x] Import/Export de archivos .md
+- [x] API `/api/save-markdown` para gestión local
+- [x] Estilos con @tailwindcss/typography
+- [ ] Vista pública completamente funcional
+  - [x] Ruta `/curso-publico/[slug]` creada
+  - [ ] Navegación mejorada entre sesiones
+  - [ ] Índice de contenidos
+- [ ] Búsqueda dentro de la documentación
+- [ ] Syntax highlighting (rehype-highlight)
 
-### **E. Módulo de Evaluación IA**
+### **E. Módulo de Evaluación IA** - ⏳ PENDIENTE
 
 #### E1. Generación de Preguntas
 
 - [ ] Firebase Function: `generateQuestions`
-- [ ] Integrar Gemini/OpenAI API
+- [ ] Integrar Gemini/OpenAI API para generación de preguntas
 - [ ] Parsear documentación como contexto
 - [ ] Generar JSON de preguntas
 - [ ] Guardar en `questionBanks/` con status "pending"
@@ -260,7 +305,7 @@ _20 Ene - 26 Ene 2026_
 - [ ] Ver logs de proctoring por estudiante
 - [ ] Exportar resultados (CSV opcional)
 
-### **F. Módulo GitHub Grader**
+### **F. Módulo GitHub Grader** - ⏳ PENDIENTE
 
 #### F1. Tareas de GitHub (Profesor)
 
@@ -296,19 +341,33 @@ _20 Ene - 26 Ene 2026_
 - [ ] Actualizar status a "graded"
 - [ ] Confirmación visual en UI
 
-### **G. Integración y UX**
+### **G. Funcionalidades Adicionales Implementadas** ✅
 
-- [ ] Dashboard unificado con todos los módulos
-- [ ] Sistema de navegación intuitivo
-- [ ] Breadcrumbs de navegación
-- [ ] Estados de carga (spinners, skeletons)
-- [ ] Manejo de errores global
-- [ ] Notificaciones toast/snackbar
-- [ ] Confirmaciones de acciones destructivas
-- [ ] Responsive design (mobile-friendly)
+- [x] Panel de Superadmin (`/dashboard/admin`)
+  - [x] Estadísticas del sistema (cursos, usuarios, sesiones, exámenes)
+  - [x] Eliminación masiva de datos con confirmación
+  - [x] Protección contra eliminación de superadmins
+  - [x] Sistema de roles (superadmin/profesor)
+- [x] Sistema de archivos locales (carpeta `/docs`)
+  - [x] Estructura flexible: `/docs/[courseId|code|slug]/XX-titulo.md`
+  - [x] Sincronización bidireccional con Firestore
+  - [x] Import/Export individual de sesiones
+  - [x] Búsqueda flexible por múltiples identificadores
+
+### **H. Integración y UX** - 🚧 EN PROGRESO
+
+- [x] Dashboard unificado con todos los módulos
+- [x] Sistema de navegación intuitivo (DashboardNav)
+- [x] Breadcrumbs de navegación
+- [x] Estados de carga (spinners, skeletons)
+- [x] Manejo de errores global
+- [x] Notificaciones toast (sonner)
+- [x] Confirmaciones de acciones destructivas
+- [ ] Responsive design completo (mobile-friendly)
 - [ ] Accesibilidad básica (ARIA labels)
+- [x] Sistema de temas con persistencia
 
-### **H. Testing y QA**
+### **I. Testing y QA** - ⏳ PENDIENTE
 
 - [ ] Testing de autenticación
 - [ ] Testing de CRUD de cursos
@@ -321,7 +380,7 @@ _20 Ene - 26 Ene 2026_
 - [ ] Testing de Firebase Functions
 - [ ] Testing de envío de emails
 
-### **I. Deployment y Producción**
+### **J. Deployment y Producción** - ⏳ PENDIENTE
 
 - [ ] Configurar Firebase project (producción)
 - [ ] Configurar reglas de seguridad Firestore
@@ -341,58 +400,61 @@ _20 Ene - 26 Ene 2026_
 ### **Alta Prioridad (Riesgo Alto)**
 
 1. **Sistema de Proctoring** - Tecnología compleja, requiere testing extensivo
-2. **Integración IA** - Dependencia externa, puede tener latencia
+2. **Integración IA** - ✅ Parcialmente implementada (generación docs), falta generación de preguntas
 3. **Firebase Functions** - Requiere despliegue separado, debugging complejo
 
 ### **Prioridad Media (Riesgo Medio)**
 
-4. **Editor Markdown** - UX crítica pero tecnología conocida
-5. **Autenticación** - Bien documentado pero crítico para seguridad
+4. **Editor Markdown** - ✅ COMPLETADO - UX crítica implementada
+5. **Autenticación** - ✅ COMPLETADO - Funcionando con Google y Email/Password
 6. **GitHub Grader** - Relativamente simple pero importante
+7. **Vista Pública de Documentación** - Funcionalidad core para estudiantes
 
 ### **Prioridad Baja (Riesgo Bajo)**
 
-7. **UI/Estilos** - Iterativo, se puede ajustar continuamente
-8. **Notificaciones Email** - Nice to have, puede simplificarse
-9. **Analytics** - Opcional para MVP
+8. **UI/Estilos** - ✅ Mayormente completado - Sistema de temas implementado
+9. **Notificaciones Email** - Nice to have, puede simplificarse
+10. **Analytics** - Opcional para MVP
 
 ---
 
 ## 📊 Métricas de Éxito del MVP
 
-- [ ] Un profesor puede crear un curso completo en < 5 minutos
-- [ ] La IA genera 20+ preguntas relevantes en < 30 segundos
+- [x] Un profesor puede crear un curso completo en < 5 minutos
+- [x] La IA genera documentación relevante en < 30 segundos (Gemini 2.0)
 - [ ] El sistema de proctoring detecta > 95% de intentos de fraude
 - [ ] Zero falsas alarmas críticas de proctoring
 - [ ] Un estudiante puede completar un examen sin fricción técnica
 - [ ] El dashboard de GitHub muestra todas las entregas en una vista
 - [ ] Los emails de feedback se envían en < 5 segundos
-- [ ] La aplicación carga en < 2 segundos (LCP)
+- [x] La aplicación carga en < 2 segundos (LCP)
 - [ ] Zero errores críticos en producción durante la primera semana
 
 ---
 
-## 🛠️ Stack Técnico - Recordatorio
+## 🛠️ Stack Técnico - Estado Actual
 
-### Frontend
+### Frontend ✅
 
-- **Framework:** Next.js 14+ (App Router)
-- **Estilos:** Tailwind CSS
-- **Markdown:** react-markdown + gray-matter
-- **Estado:** React Context API
-- **Forms:** React Hook Form (opcional)
+- **Framework:** Next.js 16.0.3 (App Router) ✅
+- **Estilos:** Tailwind CSS 3.4.17 ✅
+- **Markdown:** react-markdown 10.1.0 + remark-gfm 4.0.1 ✅
+- **Tipografía:** @tailwindcss/typography 0.5.16 ✅
+- **Estado:** React Context API (AuthContext) ✅
+- **Iconos:** Lucide React ✅
+- **Notificaciones:** Sonner ✅
 
-### Backend
+### Backend ✅
 
-- **BaaS:** Firebase
-  - Auth (Google, Email/Password)
-  - Firestore (NoSQL)
-  - Functions (Node.js)
-  - Storage (opcional para assets)
+- **BaaS:** Firebase 11.1.0 ✅
+  - Auth (Google, Email/Password) ✅
+  - Firestore (NoSQL) ✅
+  - Functions (Node.js) - Pendiente
+  - Storage - Opcional
 
 ### APIs Externas
 
-- **IA:** Gemini API / OpenAI API
+- **IA:** Google Gemini API (gemini-2.0-flash-lite) ✅
 - **Email:** Resend
 
 ### Deploy
